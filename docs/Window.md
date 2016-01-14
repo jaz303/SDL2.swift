@@ -32,5 +32,6 @@ window.setWidth(1024, height: 768)
 ### Message box
 
 ```swift
-window.showMessageBoxWithTitle("Hello", message: "This is a message")
+// Valid MesageBoxTypes: Error, Warning, Information
+window.showMessageBox(MessageBoxType.Warning, title: "Hello", message: "This is a message")
 ```

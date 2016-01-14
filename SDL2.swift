@@ -12,6 +12,12 @@ public struct InitOptions : OptionSetType {
 }
 */
 
+public enum MessageBoxType : UInt32 {
+	case Error = 0x00000010 // K_SDL_MESSAGEBOX_ERROR
+	case Warning = 0x00000020 // K_SDL_MESSAGEBOX_WARNING
+	case Information = 0x00000040 // K_SDL_MESSAGEBOX_INFORMATION
+}
+
 /*
 public struct MessageBoxFlag : RawRepresentable, Equatable {
 	public init(rawValue: UInt) {
@@ -22,7 +28,7 @@ public struct MessageBoxFlag : RawRepresentable, Equatable {
 }
 */
 
-public func showSimpleMessageBox(title: String, message: String, window: Window? = nil) {
+public func showSimpleMessageBox(type: MessageBoxType, title: String, message: String, window: Window? = nil) {
 	let w = (window == nil) ? nil : window!._sdlWindow()
 	SDL_ShowSimpleMessageBox(UInt32(0), title, message, w)
 }
@@ -86,8 +92,8 @@ public class Window {
 		SDL_SetWindowSize(theWindow, Int32(width), Int32(height))
 	}
 
-	public func showMessageBoxWithTitle(title: String, message: String) {
-		showSimpleMessageBox(title, message: message, window: self)
+	public func showMessageBox(type: MessageBoxType, title: String, message: String) {
+		showSimpleMessageBox(type, title: title, message: message, window: self)
 	}
 
 	public func _sdlWindow() -> COpaquePointer {
