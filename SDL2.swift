@@ -1,15 +1,76 @@
 import CSDL2
 
-public func createWindowAndWait() {
+/*
+public struct InitOptions : OptionSetType {
+	public init(rawValue : UInt) {
+		self.rawValue = rawValue
+	}
 
+	static var InitVideo: InitOptions { get { return InitOptions([Int(SDL_INIT_VIDEO)]) } }
+
+	public let rawValue : UInt
+}
+*/
+
+public func Init() -> Bool {
 	if SDL_Init(Uint32(SDL_INIT_VIDEO)) < 0 {
 		print("error initialising SDL");
+		return false
+	}
+	return true
+}
+
+public class Window {
+	public init(title: String = "Untitled Window", width: Int = 800, height: Int = 600) {
+		theWindow = SDL_CreateWindow(
+			title,
+			K_SDL_WINDOWPOS_UNDEFINED, K_SDL_WINDOWPOS_UNDEFINED,
+			Int32(width), Int32(height),
+			Uint32(K_SDL_WINDOW_SHOWN)
+		);
 	}
 
-	let win = SDL_CreateWindow("Hello World", K_SDL_WINDOWPOS_UNDEFINED, K_SDL_WINDOWPOS_UNDEFINED, 640, 480, Uint32(K_SDL_WINDOW_SHOWN));
-	if win == nil {
-		print("error creating window");
+	deinit {
+		SDL_DestroyWindow(theWindow)
 	}
+
+	public var title: String {
+		get {
+			return String(SDL_GetWindowTitle(theWindow))
+		}
+		set(newTitle) {
+			SDL_SetWindowTitle(theWindow, newTitle)
+		}
+	}
+
+	public var width: Int {
+		var width: Int32 = 0
+		SDL_GetWindowSize(theWindow, &width, nil)
+		return Int(width)
+	}
+
+	public var height: Int {
+		var height: Int32 = 0
+		SDL_GetWindowSize(theWindow, nil, &height)
+		return Int(height)
+	}
+
+	public func show() {
+		SDL_ShowWindow(theWindow)
+	}
+
+	public func hide() {
+		SDL_HideWindow(theWindow)
+	}
+
+	public func setWidth(width: Int, height: Int) {
+		SDL_SetWindowSize(theWindow, Int32(width), Int32(height))
+	}
+
+	let theWindow: COpaquePointer
+}
+
+public func createWindowAndWait() {
 
 	var evt = SDL_Event();
 	while true {
@@ -19,7 +80,7 @@ public func createWindowAndWait() {
 		}
 	}
 
-	SDL_DestroyWindow(win);
+	//SDL_DestroyWindow(win);
 	SDL_Quit();
 
 }
