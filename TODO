@@ -1,0 +1,9 @@
+Window
+------
+
+[ ] maintain map of window ID => window
+
+Demo 1
+------
+Load image
+Click to paint image onto window

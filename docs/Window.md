@@ -17,6 +17,7 @@ window.hide()
 ### Get `Window` attributes
 
 ```swift
+window.id
 window.width
 window.height
 window.title
@@ -26,4 +27,10 @@ window.title
 
 ```swift
 window.setWidth(1024, height: 768)
+```
+
+### Message box
+
+```swift
+window.showMessageBoxWithTitle("Hello", message: "This is a message")
 ```
