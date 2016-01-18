@@ -41,6 +41,9 @@ public func Init() -> Bool {
 	return true
 }
 
+//
+// Window
+
 public class Window {
 	public init(title: String = "Untitled Window", width: Int = 800, height: Int = 600) {
 		theWindow = SDL_CreateWindow(
@@ -117,3 +120,26 @@ public func createWindowAndWait() {
 	SDL_Quit();
 
 }
+
+//
+// Surface
+
+public class Surface {
+	public init(width: Int, height: Int, depth: Int, rmask: UInt32, gmask: UInt32, bmask:UInt32, amask:UInt32) {
+		theSurface = SDL_CreateRGBSurface(0, Int32(width), Int32(height), Int32(depth), rmask, gmask, bmask, amask)
+	}
+
+	public init(sdlSurface: UnsafeMutablePointer<SDL_Surface>) {
+		theSurface = sdlSurface
+	}
+
+	public func _sdlSurface() -> UnsafeMutablePointer<SDL_Surface> {
+		return theSurface
+	}
+
+	let theSurface:UnsafeMutablePointer<SDL_Surface>
+}
+
+//
+// Image Loading
+
