@@ -124,6 +124,17 @@ public func createWindowAndWait() {
 //
 // Surface
 
+// TODO: SDL_ConvertSurface
+// TODO: SDL_CreateRGBSurfaceFrom
+// TODO: SDL_FillRect
+// TODO: SDL_FillRects
+// TODO: SDL_(Get|Set)ClipRect
+// TODO: SDL_(Get|Set)ColorKey
+// TODO: SDL_(Get|Set)SurfaceAlphaMod
+// TODO: SDL_(Get|Set)SurfaceBlendMode
+// TODO: SDL_(Get|Set)SurfaceColorMod
+// TODO: SDL_LowerBlit
+// TODO: SDL_MUSTLOCK
 public class Surface {
 	public init(width: Int, height: Int, depth: Int, rmask: UInt32, gmask: UInt32, bmask:UInt32, amask:UInt32) {
 		theSurface = SDL_CreateRGBSurface(0, Int32(width), Int32(height), Int32(depth), rmask, gmask, bmask, amask)
@@ -131,6 +142,18 @@ public class Surface {
 
 	public init(sdlSurface: UnsafeMutablePointer<SDL_Surface>) {
 		theSurface = sdlSurface
+	}
+
+	deinit {
+		SDL_FreeSurface(theSurface)
+	}
+
+	public func lock() {
+		SDL_LockSurface(theSurface)
+	}
+
+	public func unlock() {
+		SDL_UnlockSurface(theSurface)
 	}
 
 	public func _sdlSurface() -> UnsafeMutablePointer<SDL_Surface> {
@@ -143,3 +166,12 @@ public class Surface {
 //
 // Image Loading
 
+// TODO: think about error handling here; would throwing be more appropriate?
+public func loadImage(file: String) -> Surface? {
+	let theSurface = IMG_Load(file)
+	if theSurface == nil {
+		return nil
+	} else {
+		return Surface(sdlSurface: theSurface)
+	}
+}
