@@ -1,5 +1,7 @@
 import CSDL2
 
+public typealias Rect = SDL_Rect
+
 /*
 public struct InitOptions : OptionSetType {
 	public init(rawValue : UInt) {
@@ -52,6 +54,7 @@ public class Window {
 			Int32(width), Int32(height),
 			Uint32(K_SDL_WINDOW_SHOWN)
 		);
+		theRenderer = nil
 	}
 
 	deinit {
@@ -83,6 +86,13 @@ public class Window {
 		return Int(height)
 	}
 
+	public var renderer: Renderer {
+		if theRenderer == nil {
+			theRenderer = Renderer(window: self)
+		}
+		return theRenderer!
+	}
+
 	public func show() {
 		SDL_ShowWindow(theWindow)
 	}
@@ -104,7 +114,42 @@ public class Window {
 	}
 
 	let theWindow: COpaquePointer
+	var theRenderer: Renderer?
 }
+
+//
+// Renderer
+
+// TODO: support flags
+// TODO: support index
+public class Renderer {
+	public init(window: Window) {
+		theRenderer = SDL_CreateRenderer(window._sdlWindow(), -1, UInt32(0))
+		theWindow = window
+	}
+
+	deinit {
+		SDL_DestroyRenderer(theRenderer)
+	}
+
+	public func _sdlRenderer() -> COpaquePointer {
+		return theRenderer
+	}
+
+	public func clear() {
+		SDL_RenderClear(theRenderer)
+	}
+
+	public func present() {
+		SDL_RenderPresent(theRenderer)
+	}
+
+	let theRenderer: COpaquePointer
+	let theWindow: Window
+}
+
+//
+// Test stuff
 
 public func createWindowAndWait() {
 
@@ -154,6 +199,18 @@ public class Surface {
 
 	public func unlock() {
 		SDL_UnlockSurface(theSurface)
+	}
+
+	public func blitSurface(source: Surface, inout srcRect : Rect, inout destRect: Rect) {
+		SDL_UpperBlit(source._sdlSurface(), &srcRect, theSurface, &destRect)
+	}
+
+	public func blitSurface(source: Surface, inout destRect: Rect) {
+		SDL_UpperBlit(source._sdlSurface(), nil, theSurface, &destRect)
+	}
+
+	public func blitSurface(source: Surface, x: Int, y: Int) {
+		//var r = SDL_Rect(x: Int32(x), y: Int32(y), w: theSurface.w, h: theSurface.h)
 	}
 
 	public func _sdlSurface() -> UnsafeMutablePointer<SDL_Surface> {
