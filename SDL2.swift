@@ -193,6 +193,18 @@ public class Surface {
 		SDL_FreeSurface(theSurface)
 	}
 
+	public var width: Int {
+		get {
+			return Int(SDL_X_GetSurfaceWidth(theSurface))
+		}
+	}
+
+	public var height: Int {
+		get {
+			return Int(SDL_X_GetSurfaceHeight(theSurface))
+		}
+	}
+
 	public func lock() {
 		SDL_LockSurface(theSurface)
 	}
@@ -210,7 +222,12 @@ public class Surface {
 	}
 
 	public func blitSurface(source: Surface, x: Int, y: Int) {
-		//var r = SDL_Rect(x: Int32(x), y: Int32(y), w: theSurface.w, h: theSurface.h)
+		var r = SDL_Rect(
+			x: Int32(x),
+			y: Int32(y),
+			w: SDL_X_GetSurfaceWidth(theSurface),
+			h: SDL_X_GetSurfaceHeight(theSurface)
+		)
 	}
 
 	public func _sdlSurface() -> UnsafeMutablePointer<SDL_Surface> {
