@@ -93,6 +93,13 @@ public class Window {
 		return theRenderer!
 	}
 
+	public var surface: Surface {
+		if windowSurface == nil {
+			windowSurface = Surface(sdlSurface: SDL_GetWindowSurface(theWindow), takeOwnership: false)
+		}
+		return windowSurface!
+	}
+
 	public func show() {
 		SDL_ShowWindow(theWindow)
 	}
@@ -109,12 +116,21 @@ public class Window {
 		showSimpleMessageBox(type, title: title, message: message, window: self)
 	}
 
+	public func update() {
+		SDL_UpdateWindowSurface(theWindow)
+	}
+
+	public func updateRects() {
+		// TODO: implement using SDL_UpdateWindowSurfaceRects()
+	}
+
 	public func _sdlWindow() -> COpaquePointer {
 		return theWindow
 	}
 
 	let theWindow: COpaquePointer
 	var theRenderer: Renderer?
+	var windowSurface: Surface?
 }
 
 //
@@ -183,14 +199,18 @@ public func createWindowAndWait() {
 public class Surface {
 	public init(width: Int, height: Int, depth: Int, rmask: UInt32, gmask: UInt32, bmask:UInt32, amask:UInt32) {
 		theSurface = SDL_CreateRGBSurface(0, Int32(width), Int32(height), Int32(depth), rmask, gmask, bmask, amask)
+		owned = true
 	}
 
-	public init(sdlSurface: UnsafeMutablePointer<SDL_Surface>) {
+	public init(sdlSurface: UnsafeMutablePointer<SDL_Surface>, takeOwnership: Bool = true) {
 		theSurface = sdlSurface
+		owned = takeOwnership
 	}
 
 	deinit {
-		SDL_FreeSurface(theSurface)
+		if (owned) {
+			SDL_FreeSurface(theSurface)
+		}
 	}
 
 	public var width: Int {
@@ -228,6 +248,7 @@ public class Surface {
 			w: SDL_X_GetSurfaceWidth(theSurface),
 			h: SDL_X_GetSurfaceHeight(theSurface)
 		)
+		SDL_UpperBlit(source._sdlSurface(), nil, theSurface, &r)
 	}
 
 	public func _sdlSurface() -> UnsafeMutablePointer<SDL_Surface> {
@@ -235,17 +256,66 @@ public class Surface {
 	}
 
 	let theSurface:UnsafeMutablePointer<SDL_Surface>
+	let owned:Bool
+}
+
+//
+// Timers
+
+public class Timers {
+	public class func delay(delay: Int) {
+		SDL_Delay(UInt32(delay))
+	}
+
+	public class func setTimeout(delay: Int, callback: (AnyObject?) -> Void) -> Int32 {
+		//SDL_AddTimer(UInt32(delay), handleTimeout, nil)
+		return 0
+	}
+
+	public class func clearTimeout(timerId : Int32) -> Bool {
+		return SDL_RemoveTimer(timerId) == SDL_TRUE
+	}
+
+	public class func getPerformanceCounter() -> UInt64 {
+		return SDL_GetPerformanceCounter()
+	}
+
+	public class func getPerformanceFrequency() -> UInt64 {
+		return SDL_GetPerformanceFrequency()
+	}
+
+	public class func getTicks() -> UInt32 {
+		return SDL_GetTicks()
+	}
+}
+
+func handleTimeout(interval: UInt32, userData: COpaquePointer) {
+	
+}
+
+/*
+func handleTimeout(t: Timeout) {
+	t.callback(t.userData)
+}
+*/
+
+struct Timeout {
+	let callback: (AnyObject?) -> Void
+	let sdlTimerId: Int32
+	let userData: AnyObject? 
 }
 
 //
 // Image Loading
 
-// TODO: think about error handling here; would throwing be more appropriate?
-public func loadImage(file: String) -> Surface? {
-	let theSurface = IMG_Load(file)
-	if theSurface == nil {
-		return nil
-	} else {
-		return Surface(sdlSurface: theSurface)
+public class Images {
+	// TODO: think about error handling here; would throwing be more appropriate?
+	public class func load(file: String) -> Surface? {
+		let theSurface = IMG_Load(file)
+		if theSurface == nil {
+			return nil
+		} else {
+			return Surface(sdlSurface: theSurface)
+		}
 	}
 }
