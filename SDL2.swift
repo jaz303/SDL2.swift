@@ -1,6 +1,7 @@
 import CSDL2
 
 public typealias Rect = SDL_Rect
+public typealias Point = SDL_Point
 
 /*
 public struct InitOptions : OptionSetType {
@@ -33,6 +34,40 @@ public struct MessageBoxFlag : RawRepresentable, Equatable {
 public func showSimpleMessageBox(type: MessageBoxType, title: String, message: String, window: Window? = nil) {
 	let w = (window == nil) ? nil : window!._sdlWindow()
 	SDL_ShowSimpleMessageBox(UInt32(0), title, message, w)
+}
+
+public class PixelFormats {
+	public static let ARGB8888: UInt32 = UInt32(SDL_PIXELFORMAT_ARGB8888)
+
+	// TODO: cache this
+	public class func forFormat(format: UInt32) -> PixelFormat {
+		return PixelFormat(format: SDL_AllocFormat(format))
+	}
+}
+
+public class PixelFormat {
+	public class func forNativeFormat(format: UnsafeMutablePointer<SDL_PixelFormat>) -> PixelFormat {
+		// TODO: cache
+		return PixelFormat(format: format)
+	}
+
+	init(format: UnsafeMutablePointer<SDL_PixelFormat>) {
+		theFormat = format
+	}
+
+	public var format: UInt32 {
+		get { return SDL_X_GetPixelFormatFormat(theFormat) }
+	}
+
+	public var name: String {
+		get { return String.fromCString(SDL_GetPixelFormatName(self.format))! }
+	}
+
+	public func _sdlPixelFormat() -> UnsafeMutablePointer<SDL_PixelFormat> {
+		return theFormat
+	}
+
+	let theFormat: UnsafeMutablePointer<SDL_PixelFormat>
 }
 
 //
@@ -152,8 +187,117 @@ public class Renderer {
 		SDL_RenderPresent(theRenderer)
 	}
 
+	public func createTextureFromSurface(surface: Surface) -> Texture {
+		let tex = SDL_CreateTextureFromSurface(theRenderer, surface._sdlSurface())
+		return Texture(sdlTexture: tex)
+	}
+
+	public func createStreamingTextureWidth(width: Int, height: Int) -> Texture {
+		let tex = SDL_CreateTexture(
+			theRenderer,
+			Uint32(SDL_PIXELFORMAT_ARGB8888),
+			K_SDL_TEXTUREACCESS_STREAMING,
+			Int32(width),
+			Int32(height)
+		)
+		return Texture(sdlTexture: tex)
+	}
+
+	public func setDrawColorRed(red: Uint8, green: Uint8, blue: Uint8, alpha: Uint8 = 255) {
+		SDL_SetRenderDrawColor(theRenderer, red, green, blue, alpha)
+	}
+
+	public func copyTexture(texture: Texture) {
+		SDL_RenderCopy(theRenderer, texture._sdlTexture(), nil, nil)
+	}
+
+	public func copyTexture(texture: Texture, sourceRect: Rect, destinationRect: Rect) {
+		var s = sourceRect
+		var d = destinationRect
+		SDL_RenderCopy(theRenderer, texture._sdlTexture(), &s, &d)
+	}
+
+	public func copyTexturePtr(texture: Texture, inout sourceRect: Rect, inout destinationRect: Rect) {
+		SDL_RenderCopy(theRenderer, texture._sdlTexture(), &sourceRect, &destinationRect)
+	}
+
+	public func drawLineX1(x1: Int, y1: Int, x2: Int, y2: Int) {
+		SDL_RenderDrawLine(theRenderer, Int32(x1), Int32(y1), Int32(x2), Int32(y2))
+	}
+
+	public func drawPointX(x: Int, y: Int) {
+		SDL_RenderDrawPoint(theRenderer, Int32(x), Int32(y))
+	}
+
+	public func drawRect(rect: Rect) {
+		var r = rect
+		SDL_RenderDrawRect(theRenderer, &r)
+	}
+
+	public func drawRectPtr(inout rect: Rect) {
+		SDL_RenderDrawRect(theRenderer, &rect)
+	}
+
+	public func fillRect(rect: Rect) {
+		var r = rect
+		SDL_RenderFillRect(theRenderer, &r)
+	}
+
+	public func fillRectPtr(inout rect: Rect) {
+		SDL_RenderFillRect(theRenderer, &rect)
+	}
+
 	let theRenderer: COpaquePointer
 	let theWindow: Window
+}
+
+public class Texture {
+	init(sdlTexture: COpaquePointer) {
+		theTexture = sdlTexture
+		var w: Int32 = 0, h: Int32 = 0
+		SDL_QueryTexture(theTexture, nil, nil, &w, &h)
+		width = Int(w)
+		height = Int(h)
+	}
+
+	deinit {
+		SDL_DestroyTexture(theTexture)
+	}
+
+	/**
+	 * Copy image data from surface to the texture.
+	 *
+	 * This method provides a bridge between software and hardware rendering.
+	 *
+	 * Assumes surface and texture have same size and pixel format.
+	 *
+	 * FIXME: will probably break horribly if assumptions are breached.
+	 */
+	public func copyFromSurface(surface: Surface) {
+		SDL_UpdateTexture(
+			theTexture,
+			nil,
+			SDL_X_GetSurfacePixels(surface._sdlSurface()),
+			SDL_X_GetSurfacePitch(surface._sdlSurface())
+		)
+	}
+
+	//public func lock() {
+	//	SDL_LockTexture(theTexture)
+	//}
+
+	public func unlock() {
+		SDL_UnlockTexture(theTexture)
+	}
+
+	public func _sdlTexture() -> COpaquePointer {
+		return theTexture
+	}
+
+	public let width: Int
+	public let height: Int
+
+	let theTexture: COpaquePointer
 }
 
 //
@@ -392,11 +536,13 @@ public class Surface {
 	public init(width: Int, height: Int, depth: Int, rmask: UInt32, gmask: UInt32, bmask:UInt32, amask:UInt32) {
 		theSurface = SDL_CreateRGBSurface(0, Int32(width), Int32(height), Int32(depth), rmask, gmask, bmask, amask)
 		owned = true
+		pixelFormat = PixelFormat.forNativeFormat(SDL_X_GetSurfacePixelFormat(theSurface))
 	}
 
 	public init(sdlSurface: UnsafeMutablePointer<SDL_Surface>, takeOwnership: Bool = true) {
 		theSurface = sdlSurface
 		owned = takeOwnership
+		pixelFormat = PixelFormat.forNativeFormat(SDL_X_GetSurfacePixelFormat(theSurface))
 	}
 
 	deinit {
@@ -415,6 +561,10 @@ public class Surface {
 		get {
 			return Int(SDL_X_GetSurfaceHeight(theSurface))
 		}
+	}
+
+	public func convertedToPixelFormat(pixelFormat: PixelFormat) -> Surface {
+		return Surface(sdlSurface: SDL_ConvertSurface(theSurface, pixelFormat._sdlPixelFormat(), Uint32(0)))
 	}
 
 	public func lock() {
@@ -447,8 +597,10 @@ public class Surface {
 		return theSurface
 	}
 
-	let theSurface:UnsafeMutablePointer<SDL_Surface>
-	let owned:Bool
+	public let pixelFormat: PixelFormat
+	let theSurface: UnsafeMutablePointer<SDL_Surface>
+	let owned: Bool
+
 }
 
 //
