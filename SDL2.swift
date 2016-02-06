@@ -1,7 +1,14 @@
 import CSDL2
 
 public typealias Rect = SDL_Rect
+extension Rect {
+	
+}
+
 public typealias Point = SDL_Point
+extension Point {
+	
+}
 
 /*
 public struct InitOptions : OptionSetType {
