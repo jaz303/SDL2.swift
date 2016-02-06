@@ -72,7 +72,7 @@ extension Rect {
 		x += point.x; y += point.y
 	}
 
-	mutating public func translateBy(dx: Int, dy: Int) {
+	mutating public func translateBy(dx dx: Int, dy: Int) {
 		x += dx; y += dy
 	}
 
@@ -83,7 +83,7 @@ extension Rect {
 		outRect.h = h
 	}
 
-	public func translateBy(dx: Int, dy: Int, inout outRect: Rect) {
+	public func translateBy(dx dx: Int, dy: Int, inout outRect: Rect) {
 		outRect.x = x + dx
 		outRect.y = y + dy
 		outRect.w = w
@@ -94,7 +94,7 @@ extension Rect {
 		return Rect(x: x + point.x, y: y + point.y, w: w, h: h)
 	}
 
-	public func translatedBy(dx: Int, dy: Int) -> Rect {
+	public func translatedBy(dx dx: Int, dy: Int) -> Rect {
 		return Rect(x: x + dx, y: y + dy, w: w, h: h)
 	}
 }
