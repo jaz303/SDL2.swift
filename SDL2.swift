@@ -33,7 +33,7 @@ extension Rect {
 	}
 
 	public func intersectRect(aRect: Rect) -> Rect {
-		var outRect = Rect()
+		var outRect = Rect.zero()
 		intersectRect(aRect, outRect: &outRect)
 		return outRect
 	}
