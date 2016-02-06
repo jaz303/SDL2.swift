@@ -533,7 +533,13 @@ public class Event {
 // TODO: SDL_LowerBlit
 // TODO: SDL_MUSTLOCK
 public class Surface {
-	public init(width: Int, height: Int, depth: Int, rmask: UInt32, gmask: UInt32, bmask:UInt32, amask:UInt32) {
+	public init(width: Int,
+				height: Int,
+				depth: Int = 32,
+				rmask: UInt32 = 0x00FF0000,
+				gmask: UInt32 = 0x0000FF00,
+				bmask:UInt32 = 0x000000FF,
+				amask:UInt32 = 0xFF000000) {
 		theSurface = SDL_CreateRGBSurface(0, Int32(width), Int32(height), Int32(depth), rmask, gmask, bmask, amask)
 		owned = true
 		pixelFormat = PixelFormat.forNativeFormat(SDL_X_GetSurfacePixelFormat(theSurface))
@@ -552,15 +558,12 @@ public class Surface {
 	}
 
 	public var width: Int {
-		get {
-			return Int(SDL_X_GetSurfaceWidth(theSurface))
-		}
+		get { return Int(SDL_X_GetSurfaceWidth(theSurface)) }
 	}
 
 	public var height: Int {
-		get {
-			return Int(SDL_X_GetSurfaceHeight(theSurface))
-		}
+		get { return Int(SDL_X_GetSurfaceHeight(theSurface)) }
+	}
 	}
 
 	public func convertedToPixelFormat(pixelFormat: PixelFormat) -> Surface {
