@@ -564,6 +564,13 @@ public class Surface {
 	public var height: Int {
 		get { return Int(SDL_X_GetSurfaceHeight(theSurface)) }
 	}
+
+	public var pitch: Int {
+		get { return Int(SDL_X_GetSurfacePitch(theSurface)) }
+	}
+
+	public var pixels: UnsafeMutablePointer<UInt8> {
+		get { return SDL_X_GetSurfacePixels(theSurface) }
 	}
 
 	public func convertedToPixelFormat(pixelFormat: PixelFormat) -> Surface {
