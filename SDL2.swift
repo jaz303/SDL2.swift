@@ -301,7 +301,7 @@ public class Renderer {
 		return Texture(sdlTexture: tex)
 	}
 
-	public func createStreamingTextureWidth(width: Int, height: Int) -> Texture {
+	public func createStreamingTexture(width width: Int, height: Int) -> Texture {
 		let tex = SDL_CreateTexture(
 			theRenderer,
 			Uint32(SDL_PIXELFORMAT_ARGB8888),
@@ -471,7 +471,7 @@ public class Events {
 		return evt
 	}
 
-	public class func waitTimeout(timeout: Int) -> Event? {
+	public class func wait(timeout timeout: Int) -> Event? {
 		var evt = Event()
 		if wait(&evt, timeout: timeout) {
 			return evt
