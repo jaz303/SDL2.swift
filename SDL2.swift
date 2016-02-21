@@ -686,6 +686,15 @@ public class Surface {
 		return Surface(sdlSurface: SDL_ConvertSurface(theSurface, pixelFormat._sdlPixelFormat(), Uint32(0)))
 	}
 
+	/*
+	 * Plot a pixel on the surface, assuming that the underyling SDL surface
+	 * representation uses 32 bits per pixel. The pixel value is written
+	 * unaltered, i.e. no color format conversion is performed.
+	 */
+	public func putPixel32(x: Int, _ y: Int, _ color: Uint32) {
+		SDL_X_SetSurfacePixel32(theSurface, Int32(x), Int32(y), color)
+	}
+
 	public func lock() {
 		SDL_LockSurface(theSurface)
 	}
