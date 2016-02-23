@@ -145,10 +145,23 @@ public func showSimpleMessageBox(type: MessageBoxType, title: String, message: S
 	SDL_ShowSimpleMessageBox(UInt32(0), title, message, w)
 }
 
+public func calculateGammaRamp(gamma: Float, ramp: [UInt16]) {
+	// TODO: get unsafe pointer
+	// SDL_CalculateGammaRamp(gamma, ramp)
+}
+
+//
+// Pixel formats
+
+// TODO: cache pixel formats created in forNativeFormat()
+// TODO: everything palette related
+// TODO: SDL_MasksToPixelFormatEnum(), SDL_PixelFormatEnumToMasks()
+// TODO: cache this
+// TODO: pixel format enums
+
 public class PixelFormats {
 	public static let ARGB8888: UInt32 = UInt32(SDL_PIXELFORMAT_ARGB8888)
 
-	// TODO: cache this
 	public class func forFormat(format: UInt32) -> PixelFormat {
 		return PixelFormat(format: SDL_AllocFormat(format))
 	}
@@ -156,7 +169,6 @@ public class PixelFormats {
 
 public class PixelFormat {
 	public class func forNativeFormat(format: UnsafeMutablePointer<SDL_PixelFormat>) -> PixelFormat {
-		// TODO: cache
 		return PixelFormat(format: format)
 	}
 
@@ -172,7 +184,23 @@ public class PixelFormat {
 		get { return String.fromCString(SDL_GetPixelFormatName(self.format))! }
 	}
 
-	public func _sdlPixelFormat() -> UnsafeMutablePointer<SDL_PixelFormat> {
+	public func getColorComponents(color: UInt32, inout r: UInt8, inout g: UInt8, inout b: UInt8) {
+		SDL_GetRGB(color, theFormat, &r, &g, &b)
+	}
+
+	public func getColorComponents(color: UInt32, inout r: UInt8, inout g: UInt8, inout b: UInt8, inout a: UInt8) {
+		SDL_GetRGBA(color, theFormat, &r, &g, &b, &a)
+	}
+
+	public func mapColor(r r: UInt8, g: UInt8, b: UInt8) -> UInt32 {
+		return SDL_MapRGB(theFormat, r, g, b)
+	}
+
+	public func mapColor(r r: UInt8, g: UInt8, b: UInt8, a: UInt8) -> UInt32 {
+		return SDL_MapRGBA(theFormat, r, g, b, a)
+	}
+
+	public func sdlPixelFormat() -> UnsafeMutablePointer<SDL_PixelFormat> {
 		return theFormat
 	}
 
@@ -683,7 +711,7 @@ public class Surface {
 	}
 
 	public func convertedToPixelFormat(pixelFormat: PixelFormat) -> Surface {
-		return Surface(sdlSurface: SDL_ConvertSurface(theSurface, pixelFormat._sdlPixelFormat(), Uint32(0)))
+		return Surface(sdlSurface: SDL_ConvertSurface(theSurface, pixelFormat.sdlPixelFormat(), Uint32(0)))
 	}
 
 	/*
@@ -702,6 +730,24 @@ public class Surface {
 		px[offset + 1] = UInt8((color >> 16) & 0xFF)
 		px[offset + 2] = UInt8((color >>  8) & 0xFF)
 		px[offset + 3] = UInt8((color >>  0) & 0xFF)
+	}
+
+	public func colorKey() -> UInt32 {
+		var color: UInt32 = 0
+		SDL_GetColorKey(theSurface, &color)
+		return color
+	}
+
+	public func copyColorKeyTo(inout color: UInt32) -> Bool {
+		return SDL_GetColorKey(theSurface, &color) != 1
+	}
+
+	public func disableColorKey() {
+		SDL_SetColorKey(theSurface, 0, 0)
+	}
+
+	public func enableColorKey(color: UInt32) {
+		SDL_SetColorKey(theSurface, 1, color)
 	}
 
 	public func lock() {
