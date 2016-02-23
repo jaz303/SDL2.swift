@@ -165,7 +165,7 @@ public class PixelFormat {
 	}
 
 	public var format: UInt32 {
-		get { return SDL_X_GetPixelFormatFormat(theFormat) }
+		get { return theFormat.memory.format }
 	}
 
 	public var name: String {
@@ -386,8 +386,8 @@ public class Texture {
 		SDL_UpdateTexture(
 			theTexture,
 			nil,
-			SDL_X_GetSurfacePixels(surface._sdlSurface()),
-			SDL_X_GetSurfacePitch(surface._sdlSurface())
+			surface._sdlSurface().memory.pixels,
+			surface._sdlSurface().memory.pitch
 		)
 	}
 
@@ -651,13 +651,13 @@ public class Surface {
 				amask:UInt32 = 0xFF000000) {
 		theSurface = SDL_CreateRGBSurface(0, Int32(width), Int32(height), Int32(depth), rmask, gmask, bmask, amask)
 		owned = true
-		pixelFormat = PixelFormat.forNativeFormat(SDL_X_GetSurfacePixelFormat(theSurface))
+		pixelFormat = PixelFormat.forNativeFormat(theSurface.memory.format)
 	}
 
 	public init(sdlSurface: UnsafeMutablePointer<SDL_Surface>, takeOwnership: Bool = true) {
 		theSurface = sdlSurface
 		owned = takeOwnership
-		pixelFormat = PixelFormat.forNativeFormat(SDL_X_GetSurfacePixelFormat(theSurface))
+		pixelFormat = PixelFormat.forNativeFormat(theSurface.memory.format)
 	}
 
 	deinit {
@@ -667,19 +667,22 @@ public class Surface {
 	}
 
 	public var width: Int {
-		get { return Int(SDL_X_GetSurfaceWidth(theSurface)) }
+		get { return Int(theSurface.memory.w) }
 	}
 
 	public var height: Int {
-		get { return Int(SDL_X_GetSurfaceHeight(theSurface)) }
+		get { return Int(theSurface.memory.h) }
 	}
 
 	public var pitch: Int {
-		get { return Int(SDL_X_GetSurfacePitch(theSurface)) }
+		get { return Int(theSurface.memory.pitch) }
 	}
 
 	public var pixels: UnsafeMutablePointer<UInt8> {
-		get { return SDL_X_GetSurfacePixels(theSurface) }
+		get {
+			let ptr = COpaquePointer(theSurface.memory.pixels)
+			return UnsafeMutablePointer<UInt8>(ptr)
+		}
 	}
 
 	public func convertedToPixelFormat(pixelFormat: PixelFormat) -> Surface {
@@ -690,9 +693,17 @@ public class Surface {
 	 * Plot a pixel on the surface, assuming that the underyling SDL surface
 	 * representation uses 32 bits per pixel. The pixel value is written
 	 * unaltered, i.e. no color format conversion is performed.
+	 *
+	 * FIXME: this assumes 4 bytes per pixel
 	 */
 	public func putPixel32(x: Int, _ y: Int, _ color: Uint32) {
-		SDL_X_SetSurfacePixel32(theSurface, Int32(x), Int32(y), color)
+		let px = UnsafeMutablePointer<UInt8>(COpaquePointer(theSurface.memory.pixels))
+		let pitch = theSurface.memory.pitch
+		let offset = (y * Int(pitch)) + (x * 4)
+		px[offset + 0] = UInt8((color >> 24) & 0xFF)
+		px[offset + 1] = UInt8((color >> 16) & 0xFF)
+		px[offset + 2] = UInt8((color >>  8) & 0xFF)
+		px[offset + 3] = UInt8((color >>  0) & 0xFF)
 	}
 
 	public func lock() {
@@ -715,8 +726,8 @@ public class Surface {
 		var r = SDL_Rect(
 			x: Int32(x),
 			y: Int32(y),
-			w: SDL_X_GetSurfaceWidth(theSurface),
-			h: SDL_X_GetSurfaceHeight(theSurface)
+			w: theSurface.memory.w,
+			h: theSurface.memory.h
 		)
 		SDL_UpperBlit(source._sdlSurface(), nil, theSurface, &r)
 	}
