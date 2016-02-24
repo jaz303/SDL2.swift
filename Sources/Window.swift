@@ -42,7 +42,7 @@ public class Window {
 
 	public var renderer: Renderer {
 		if theRenderer == nil {
-			theRenderer = Renderer(window: self)
+			theRenderer = WindowRenderer(window: self)
 		}
 		return theRenderer!
 	}
@@ -83,6 +83,6 @@ public class Window {
 	}
 
 	let theWindow: COpaquePointer
-	var theRenderer: Renderer?
+	var theRenderer: WindowRenderer?
 	var windowSurface: Surface?
 }
