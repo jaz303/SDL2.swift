@@ -1,16 +1,24 @@
 import CSDL2
 
-public class Timers {
+public class sdl {
 	public class func delay(delay: Int) {
 		SDL_Delay(UInt32(delay))
 	}
 
-	public class func setTimeout(delay: Int, callback: (AnyObject?) -> Void) -> Int32 {
-		//SDL_AddTimer(UInt32(delay), handleTimeout, nil)
-		return 0
+	public class func setTimeout(delay: Int, callback: TimerCallback) -> TimerID {
+		let box = Box(callback)
+		let opq = Unmanaged.passRetained(box).toOpaque()
+		let mut = UnsafeMutablePointer<Void>(opq)
+		return SDL_AddTimer(UInt32(delay), { (delay,userdata) in
+			let opq = COpaquePointer(userdata)
+			let box: Box = Unmanaged
+							.fromOpaque(opq)
+							.takeRetainedValue()
+			return UInt32(box.value(Int(delay)))
+		}, mut)
 	}
 
-	public class func clearTimeout(timerId : Int32) -> Bool {
+	public class func clearTimeout(timerId: TimerID) -> Bool {
 		return SDL_RemoveTimer(timerId) == SDL_TRUE
 	}
 
@@ -27,18 +35,7 @@ public class Timers {
 	}
 }
 
-func handleTimeout(interval: UInt32, userData: COpaquePointer) {
-	
-}
-
-/*
-func handleTimeout(t: Timeout) {
-	t.callback(t.userData)
-}
-*/
-
-struct Timeout {
-	let callback: (AnyObject?) -> Void
-	let sdlTimerId: Int32
-	let userData: AnyObject? 
+class Box {
+	init(_ v: TimerCallback) { value = v }
+	let value: TimerCallback
 }
