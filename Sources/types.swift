@@ -8,3 +8,5 @@ public typealias EventFilterCallback = (inout Event) -> Bool
 public typealias EventWatchCallback = (inout Event) -> ()
 public typealias TouchID = SDL_TouchID
 public typealias SystemCursor = SDL_SystemCursor
+public typealias Keycode = SDL_Keycode
+public typealias Scancode = SDL_Scancode

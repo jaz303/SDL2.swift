@@ -40,6 +40,10 @@ public class Window {
 		return Int(height)
 	}
 
+	public var screenKeyboardShown: Bool {
+		return Keyboard.isScreenKeyboardShownOnWindow(self)
+	}
+
 	public var renderer: Renderer {
 		if theRenderer == nil {
 			theRenderer = WindowRenderer(window: self)
