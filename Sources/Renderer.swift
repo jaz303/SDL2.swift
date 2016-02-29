@@ -67,7 +67,7 @@ public class Renderer {
 		y = Int(y32)
 	}
 
-	public func setLogicalSize(x: Int, y: Int) {
+	public func setLogicalSize(x: Int, _ y: Int) {
 		SDL_RenderSetLogicalSize(theRenderer, Int32(x), Int32(y))
 	}
 
