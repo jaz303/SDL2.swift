@@ -11,9 +11,9 @@ public class sdl {
 		let mut = UnsafeMutablePointer<Void>(opq)
 		return SDL_AddTimer(UInt32(delay), { (delay,userdata) in
 			let opq = COpaquePointer(userdata)
-			let box: Box = Unmanaged
-							.fromOpaque(opq)
-							.takeRetainedValue()
+			let box: Box<TimerCallback> = Unmanaged
+											.fromOpaque(opq)
+											.takeRetainedValue()
 			return UInt32(box.value(Int(delay)))
 		}, mut)
 	}
@@ -33,9 +33,4 @@ public class sdl {
 	public class func getTicks() -> UInt32 {
 		return SDL_GetTicks()
 	}
-}
-
-class Box {
-	init(_ v: TimerCallback) { value = v }
-	let value: TimerCallback
 }
