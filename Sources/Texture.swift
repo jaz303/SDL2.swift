@@ -22,11 +22,11 @@ public class Texture {
 		SDL_DestroyTexture(theTexture)
 	}
 
-	public func updateRect(inout rect: Rect, pixels: UnsafePointer<Void>, pitch: Int) {
+	public func updateRect(rect: inout Rect, pixels: UnsafePointer<Void>, pitch: Int) {
 		SDL_UpdateTexture(theTexture, &rect, pixels, Int32(pitch))
 	}
 
-	public func copyAlphaModTo(inout alpha: UInt8) -> Bool {
+	public func copyAlphaModTo(alpha: inout UInt8) -> Bool {
 		return SDL_GetTextureAlphaMod(theTexture, &alpha) == 0
 	}
 
@@ -34,7 +34,7 @@ public class Texture {
 		return SDL_SetTextureAlphaMod(theTexture, alpha) == 0
 	}
 
-	public func copyColorModTo(inout r r: UInt8, inout g: UInt8, inout b: UInt8) -> Bool {
+	public func copyColorModTo(inout r r: UInt8, g: inout UInt8, b: inout UInt8) -> Bool {
 		return SDL_GetTextureColorMod(theTexture, &r, &g, &b) == 0
 	}
 

@@ -53,14 +53,14 @@ public class Renderer {
 		get { return SDL_RenderTargetSupported(theRenderer) == SDL_TRUE }
 	}
 
-	public func copyOutputSizeTo(inout x: Int, inout y: Int) {
+	public func copyOutputSizeTo(x: inout Int, y: inout Int) {
 		var x32: Int32 = 0, y32: Int32 = 0
 		SDL_GetRendererOutputSize(theRenderer, &x32, &y32)
 		x = Int(x32)
 		y = Int(y32)
 	}
 
-	public func copyLogicalSizeTo(inout x: Int, inout y: Int) {
+	public func copyLogicalSizeTo(x: inout Int, y: inout Int) {
 		var x32: Int32 = 0, y32: Int32 = 0
 		SDL_RenderGetLogicalSize(theRenderer, &x32, &y32)
 		x = Int(x32)
@@ -75,11 +75,11 @@ public class Renderer {
 	//	return SDL_RenderIsClipEnabled(theRenderer) == 1
 	//}
 
-	public func setClipRect(inout rect: Rect) {
+	public func setClipRect(rect: inout Rect) {
 		SDL_RenderSetClipRect(theRenderer, &rect)
 	}
 
-	public func copyClipRectTo(inout rect: Rect) {
+	public func copyClipRectTo(rect: inout Rect) {
 		SDL_RenderGetClipRect(theRenderer, &rect)
 	}
 
@@ -91,11 +91,11 @@ public class Renderer {
 		SDL_RenderSetScale(theRenderer, sx, sy)	
 	}
 
-	public func copyScaleTo(inout sx: Float, inout _ sy: Float) {
+	public func copyScaleTo(sx: inout Float, inout _ sy: Float) {
 		SDL_RenderGetScale(theRenderer, &sx, &sy)	
 	}
 
-	public func copyViewportTo(inout rect: Rect) {
+	public func copyViewportTo(rect: inout Rect) {
 		SDL_RenderGetViewport(theRenderer, &rect)
 	}
 
@@ -104,7 +104,7 @@ public class Renderer {
 		SDL_RenderSetViewport(theRenderer, &r)
 	}
 
-	public func setViewport(inout rect: Rect) {
+	public func setViewport(rect: inout Rect) {
 		SDL_RenderSetViewport(theRenderer, &rect)
 	}
 
@@ -137,7 +137,7 @@ public class Renderer {
 		return Texture(sdlTexture: tex)
 	}
 
-	public func copyDrawColorTo(inout r r: UInt8, inout g: UInt8, inout b: UInt8, inout a: UInt8) {
+	public func copyDrawColorTo(inout r r: UInt8, g: inout UInt8, b: inout UInt8, a: inout UInt8) {
 		SDL_GetRenderDrawColor(theRenderer, &r, &g, &b, &a)
 	}
 
@@ -203,7 +203,7 @@ public class Renderer {
 		SDL_RenderDrawPoints(theRenderer, ps, Int32(ps.count))
 	}
 
-	public func drawRect(inout rect: Rect) {
+	public func drawRect(rect: inout Rect) {
 		SDL_RenderDrawRect(theRenderer, &rect)
 	}
 
@@ -216,7 +216,7 @@ public class Renderer {
 		SDL_RenderDrawRects(theRenderer, rects, Int32(rects.count))
 	}
 
-	public func fillRect(inout rect: Rect) {
+	public func fillRect(rect: inout Rect) {
 		SDL_RenderFillRect(theRenderer, &rect)
 	}
 

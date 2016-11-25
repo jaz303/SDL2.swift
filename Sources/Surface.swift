@@ -80,7 +80,7 @@ public class Surface {
 		return color
 	}
 
-	public func copyColorKeyTo(inout color: UInt32) -> Bool {
+	public func copyColorKeyTo(color: inout UInt32) -> Bool {
 		return SDL_GetColorKey(theSurface, &color) != 1
 	}
 
@@ -100,7 +100,7 @@ public class Surface {
 		SDL_UnlockSurface(theSurface)
 	}
 
-	public func fillRect(inout rect: Rect, color: UInt32) {
+	public func fillRect(rect: inout Rect, color: UInt32) {
 		SDL_FillRect(theSurface, &rect, color)
 	}
 
@@ -114,7 +114,7 @@ public class Surface {
 		return r
 	}
 
-	public func clipRect(inout rect: Rect) {
+	public func clipRect(rect: inout Rect) {
 		SDL_GetClipRect(theSurface, &rect)
 	}
 
@@ -122,15 +122,15 @@ public class Surface {
 		SDL_SetClipRect(theSurface, nil)
 	}
 
-	public func setClipRect(inout rect: Rect) {
+	public func setClipRect(rect: inout Rect) {
 		SDL_SetClipRect(theSurface, &rect)
 	}
 
-	public func blitSurface(source: Surface, inout srcRect : Rect, inout destRect: Rect) {
+	public func blitSurface(source: Surface, inout srcRect : Rect, destRect: inout Rect) {
 		SDL_UpperBlit(source._sdlSurface(), &srcRect, theSurface, &destRect)
 	}
 
-	public func blitSurface(source: Surface, inout destRect: Rect) {
+	public func blitSurface(source: Surface, destRect: inout Rect) {
 		SDL_UpperBlit(source._sdlSurface(), nil, theSurface, &destRect)
 	}
 

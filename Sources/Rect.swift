@@ -25,7 +25,7 @@ extension Rect {
 		return outRect
 	}
 
-	public func unionRect(aRect: Rect, inout outRect: Rect) {
+	public func unionRect(aRect: Rect, outRect: inout Rect) {
 		outRect.x = min(x, aRect.x)
 		outRect.y = min(y, aRect.y)
 		outRect.w = max(right, aRect.right) - outRect.x
@@ -38,7 +38,7 @@ extension Rect {
 		return outRect
 	}
 
-	public func intersectRect(aRect: Rect, inout outRect: Rect) -> Bool {
+	public func intersectRect(aRect: Rect, outRect: inout Rect) -> Bool {
 		let x5 = max(x, aRect.x)
 		let x6 = min(right, aRect.right)
 		let y5 = max(y, aRect.y)
@@ -76,14 +76,14 @@ extension Rect {
 		x += dx; y += dy
 	}
 
-	public func translateBy(point: Point, inout outRect: Rect) {
+	public func translateBy(point: Point, outRect: inout Rect) {
 		outRect.x = x + point.x
 		outRect.y = y + point.y
 		outRect.w = w
 		outRect.h = h
 	}
 
-	public func translateBy(dx dx: Int, dy: Int, inout outRect: Rect) {
+	public func translateBy(dx dx: Int, dy: Int, outRect: inout Rect) {
 		outRect.x = x + dx
 		outRect.y = y + dy
 		outRect.w = w

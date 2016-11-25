@@ -29,7 +29,7 @@ public class Events {
 		SDL_PumpEvents()
 	}
 
-	public class func push(inout evt: Event) {
+	public class func push(evt: inout Event) {
 		SDL_PushEvent(&evt)
 	}
 
@@ -42,7 +42,7 @@ public class Events {
 		}
 	}
 
-	public class func poll(inout evt: Event) -> Bool {
+	public class func poll(evt: inout Event) -> Bool {
 		return SDL_PollEvent(&evt) == Int32(1)
 	}
 
@@ -61,11 +61,11 @@ public class Events {
 		}
 	}
 
-	public class func wait(inout evt: Event) {
+	public class func wait(evt: inout Event) {
 		SDL_WaitEvent(&evt)
 	}
 
-	public class func wait(inout evt: Event, timeout: Int) -> Bool {
+	public class func wait(evt: inout Event, timeout: Int) -> Bool {
 		return SDL_WaitEventTimeout(&evt, Int32(timeout)) == 1
 	}
 
@@ -85,17 +85,17 @@ public class Events {
 		SDL_FlushEvents(min, max)
 	}
 
-	public class func add(inout events: [Event], count: Int = -1) {
+	public class func add(events: inout [Event], count: Int = -1) {
 		let c = (count == -1) ? events.count : count
 		SDL_PeepEvents(&events, Int32(c), SDL_ADDEVENT, SDL_FIRSTEVENT.rawValue, SDL_LASTEVENT.rawValue)
 	}
 
-	public class func get(inout events: [Event], count: Int = -1, minType: UInt32 = SDL_FIRSTEVENT.rawValue, maxType: UInt32 = SDL_LASTEVENT.rawValue) {
+	public class func get(events: inout [Event], count: Int = -1, minType: UInt32 = SDL_FIRSTEVENT.rawValue, maxType: UInt32 = SDL_LASTEVENT.rawValue) {
 		let c = (count == -1) ? events.count : count
 		SDL_PeepEvents(&events, Int32(c), SDL_GETEVENT, SDL_FIRSTEVENT.rawValue, SDL_LASTEVENT.rawValue)
 	}
 
-	public class func peek(inout events: [Event], count: Int = -1, minType: UInt32 = SDL_FIRSTEVENT.rawValue, maxType: UInt32 = SDL_LASTEVENT.rawValue) {
+	public class func peek(events: inout [Event], count: Int = -1, minType: UInt32 = SDL_FIRSTEVENT.rawValue, maxType: UInt32 = SDL_LASTEVENT.rawValue) {
 		let c = (count == -1) ? events.count : count
 		SDL_PeepEvents(&events, Int32(c), SDL_PEEKEVENT, minType, maxType)
 	}
