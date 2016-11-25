@@ -66,7 +66,7 @@ public class Keyboard {
 		SDL_StopTextInput()
 	}
 
-	public static func setTextInputRect(inout rect: Rect) {
+	public static func setTextInputRect(rect: inout Rect) {
 		SDL_SetTextInputRect(&rect)
 	}
 

@@ -35,7 +35,7 @@ public class Mouse {
 		SDL_WarpMouseInWindow(window._sdlWindow(), Int32(x), Int32(y))
 	}
 
-	public static func copyMouseStateTo(inout x: Int, inout _ y: Int) {
+	public static func copyMouseStateTo(x: inout Int, _ y: inout Int) {
 		// TODO: get button state too
 		var x32: Int32 = 0, y32: Int32 = 0
 		SDL_GetMouseState(&x32, &y32)
@@ -43,7 +43,7 @@ public class Mouse {
 		y = Int(y32)
 	}
 
-	// public static func copyGlobalMouseStateTo(inout x: Int, inout _ y: Int) {
+	// public static func copyGlobalMouseStateTo(x: inout Int, inout _ y: Int) {
 	// 	// TODO: get button state too
 	// 	var x32: Int32 = 0, y32: Int32 = 0
 	// 	SDL_GetGlobalMouseState(&x32, &y32)
@@ -51,7 +51,7 @@ public class Mouse {
 	// 	y = Int(y32)
 	// }
 
-	public static func copyRelativeMouseStateTo(inout x: Int, inout _ y: Int) {
+	public static func copyRelativeMouseStateTo(x: inout Int, _ y: inout Int) {
 		// TODO: get button state too
 		var x32: Int32 = 0, y32: Int32 = 0
 		SDL_GetRelativeMouseState(&x32, &y32)
