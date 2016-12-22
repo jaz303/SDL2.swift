@@ -6,7 +6,7 @@ let package = Package(
 	dependencies: [
 		.Package(
 			url: "https://github.com/jaz303/CSDL2.swift.git",
-			majorVersion: 1
+			majorVersion: 2
 		)
 	]
 )
