@@ -34,7 +34,7 @@ public class Texture {
 		return SDL_SetTextureAlphaMod(theTexture, alpha) == 0
 	}
 
-	public func copyColorModTo( r r: inout UInt8, g: inout UInt8, b: inout UInt8) -> Bool {
+	public func copyColorModTo(r: inout UInt8, g: inout UInt8, b: inout UInt8) -> Bool {
 		return SDL_GetTextureColorMod(theTexture, &r, &g, &b) == 0
 	}
 

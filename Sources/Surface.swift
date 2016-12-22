@@ -100,6 +100,11 @@ public class Surface {
 		SDL_UnlockSurface(theSurface)
 	}
 
+	public func clear(color: UInt32) {
+		var theRect = Rect(x: 0, y: 0, w: Int32(width), h: Int32(height))
+		fillRect(rect: &theRect, color: color)
+	}
+
 	public func fillRect(rect: inout Rect, color: UInt32) {
 		SDL_FillRect(theSurface, &rect, color)
 	}
