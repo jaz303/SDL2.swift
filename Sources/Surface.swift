@@ -18,13 +18,13 @@ public class Surface {
 				amask:UInt32 = 0xFF000000) {
 		theSurface = SDL_CreateRGBSurface(0, Int32(width), Int32(height), Int32(depth), rmask, gmask, bmask, amask)
 		owned = true
-		pixelFormat = PixelFormat.forNativeFormat(theSurface.memory.format)
+		pixelFormat = PixelFormat.forNativeFormat(theSurface.pointee.format)
 	}
 
 	public init(sdlSurface: UnsafeMutablePointer<SDL_Surface>, takeOwnership: Bool = true) {
 		theSurface = sdlSurface
 		owned = takeOwnership
-		pixelFormat = PixelFormat.forNativeFormat(theSurface.memory.format)
+		pixelFormat = PixelFormat.forNativeFormat(theSurface.pointee.format)
 	}
 
 	deinit {
@@ -34,20 +34,20 @@ public class Surface {
 	}
 
 	public var width: Int {
-		get { return Int(theSurface.memory.w) }
+		get { return Int(theSurface.pointee.w) }
 	}
 
 	public var height: Int {
-		get { return Int(theSurface.memory.h) }
+		get { return Int(theSurface.pointee.h) }
 	}
 
 	public var pitch: Int {
-		get { return Int(theSurface.memory.pitch) }
+		get { return Int(theSurface.pointee.pitch) }
 	}
 
 	public var pixels: UnsafeMutablePointer<UInt8> {
 		get {
-			let ptr = COpaquePointer(theSurface.memory.pixels)
+			let ptr = OpaquePointer(theSurface.pointee.pixels)!
 			return UnsafeMutablePointer<UInt8>(ptr)
 		}
 	}
@@ -65,8 +65,8 @@ public class Surface {
 	 * FIXME: endianness issues?
 	 */
 	public func putPixel32(x: Int, _ y: Int, _ color: Uint32) {
-		let px = UnsafeMutablePointer<UInt8>(COpaquePointer(theSurface.memory.pixels))
-		let pitch = theSurface.memory.pitch
+		let px = UnsafeMutablePointer<UInt8>(OpaquePointer(theSurface.pointee.pixels))!
+		let pitch = theSurface.pointee.pitch
 		let offset = (y * Int(pitch)) + (x * 4)
 		px[offset + 0] = UInt8((color >> 24) & 0xFF)
 		px[offset + 1] = UInt8((color >> 16) & 0xFF)
@@ -126,7 +126,7 @@ public class Surface {
 		SDL_SetClipRect(theSurface, &rect)
 	}
 
-	public func blitSurface(source: Surface, inout srcRect : Rect, destRect: inout Rect) {
+	public func blitSurface(source: Surface,  srcRect : inout Rect, destRect: inout Rect) {
 		SDL_UpperBlit(source._sdlSurface(), &srcRect, theSurface, &destRect)
 	}
 
@@ -138,8 +138,8 @@ public class Surface {
 		var r = SDL_Rect(
 			x: Int32(x),
 			y: Int32(y),
-			w: theSurface.memory.w,
-			h: theSurface.memory.h
+			w: theSurface.pointee.w,
+			h: theSurface.pointee.h
 		)
 		SDL_UpperBlit(source._sdlSurface(), nil, theSurface, &r)
 	}

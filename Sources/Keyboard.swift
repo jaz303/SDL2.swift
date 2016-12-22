@@ -21,12 +21,12 @@ public class Keyboard {
 	}
 
 	public static func nameForKey(keycode: Keycode) -> String? {
-		let str = String.fromCString(SDL_GetKeyName(keycode))!
+		let str = String(cString: SDL_GetKeyName(keycode))
 		return (str == "") ? nil : str
 	}
 
 	public static func nameForScancode(scancode: Scancode) -> String? {
-		let str = String.fromCString(SDL_GetScancodeName(scancode))
+		let str = String(cString: SDL_GetScancodeName(scancode))
 		return (str == "") ? nil : str
 	}
 

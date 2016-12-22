@@ -13,9 +13,9 @@ public struct InitOptions : OptionSetType {
 */
 
 public enum MessageBoxType : UInt32 {
-	case Error = 0x00000010 // K_SDL_MESSAGEBOX_ERROR
-	case Warning = 0x00000020 // K_SDL_MESSAGEBOX_WARNING
-	case Information = 0x00000040 // K_SDL_MESSAGEBOX_INFORMATION
+	case Error = 0x00000010 // SDL_MESSAGEBOX_ERROR
+	case Warning = 0x00000020 // SDL_MESSAGEBOX_WARNING
+	case Information = 0x00000040 // SDL_MESSAGEBOX_INFORMATION
 }
 
 /*

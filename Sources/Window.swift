@@ -4,9 +4,9 @@ public class Window {
 	public init(title: String = "Untitled Window", width: Int = 800, height: Int = 600) {
 		theWindow = SDL_CreateWindow(
 			title,
-			K_SDL_WINDOWPOS_UNDEFINED, K_SDL_WINDOWPOS_UNDEFINED,
+			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 			Int32(width), Int32(height),
-			Uint32(K_SDL_WINDOW_SHOWN)
+			Uint32(SDL_WINDOW_SHOWN)
 		);
 		theRenderer = nil
 	}
@@ -17,7 +17,7 @@ public class Window {
 
 	public var title: String {
 		get {
-			return String(SDL_GetWindowTitle(theWindow))
+			return String(describing: SDL_GetWindowTitle(theWindow))
 		}
 		set(newTitle) {
 			SDL_SetWindowTitle(theWindow, newTitle)
@@ -41,7 +41,7 @@ public class Window {
 	}
 
 	public var screenKeyboardShown: Bool {
-		return Keyboard.isScreenKeyboardShownOnWindow(self)
+		return Keyboard.isScreenKeyboardShownOnWindow(window: self)
 	}
 
 	public var renderer: Renderer {
@@ -71,7 +71,7 @@ public class Window {
 	}
 
 	public func showMessageBox(type: MessageBoxType, title: String, message: String) {
-		showSimpleMessageBox(type, title: title, message: message, window: self)
+		showSimpleMessageBox(type: type, title: title, message: message, window: self)
 	}
 
 	public func update() {
@@ -82,11 +82,11 @@ public class Window {
 		// TODO: implement using SDL_UpdateWindowSurfaceRects()
 	}
 
-	public func _sdlWindow() -> COpaquePointer {
+	public func _sdlWindow() -> OpaquePointer {
 		return theWindow
 	}
 
-	let theWindow: COpaquePointer
+	let theWindow: OpaquePointer
 	var theRenderer: WindowRenderer?
 	var windowSurface: Surface?
 }

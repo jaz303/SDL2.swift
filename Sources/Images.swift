@@ -9,7 +9,7 @@ public class Images {
 		if theSurface == nil {
 			return nil
 		} else {
-			return Surface(sdlSurface: theSurface)
+			return Surface(sdlSurface: theSurface!)
 		}
 	}
 }

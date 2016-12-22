@@ -5,7 +5,7 @@ import CSDL2
 // TODO: dollar templates
 
 public class WatchID {
-	init(_ callback: EventWatchCallback) {
+	init(_ callback: @escaping EventWatchCallback) {
 		cb = callback
 	}
 	let cb: EventWatchCallback
@@ -21,7 +21,7 @@ public class Events {
 		SDL_EventState(type.rawValue, enabled ? SDL_ENABLE : SDL_DISABLE)
 	}
 
-	public static func registerEvents(count count: Int) -> UInt32 {
+	public static func registerEvents(count: Int) -> UInt32 {
 		return SDL_RegisterEvents(Int32(count))
 	}
 
@@ -42,19 +42,19 @@ public class Events {
 		}
 	}
 
-	public class func poll(evt: inout Event) -> Bool {
+	public class func poll(_ evt: inout Event) -> Bool {
 		return SDL_PollEvent(&evt) == Int32(1)
 	}
 
 	public class func wait() -> Event {
 		var evt = Event()
-		wait(&evt)
+		wait(evt: &evt)
 		return evt
 	}
 
-	public class func wait(timeout timeout: Int) -> Event? {
+	public class func wait(timeout: Int) -> Event? {
 		var evt = Event()
-		if wait(&evt, timeout: timeout) {
+		if wait(evt: &evt, timeout: timeout) {
 			return evt
 		} else {
 			return nil
@@ -69,11 +69,11 @@ public class Events {
 		return SDL_WaitEventTimeout(&evt, Int32(timeout)) == 1
 	}
 
-	public class func flush(type type: SDL_EventType) {
+	public class func flush(type: SDL_EventType) {
 		SDL_FlushEvent(type.rawValue)
 	}
 
-	public class func flush(type type: UInt32) {
+	public class func flush(type: UInt32) {
 		SDL_FlushEvent(type)
 	}
 
@@ -112,12 +112,12 @@ public class Events {
 		return SDL_HasEvents(minType.rawValue, maxType.rawValue) == SDL_TRUE
 	}
 
-	public class func hasEvents(minType: Uint32, maxType: Uint32) -> Bool {
+	public class func hasEvents(minType: UInt32, maxType: UInt32) -> Bool {
 		return SDL_HasEvents(minType, maxType) == SDL_TRUE
 	}
 
-	//public class func quitRequested() {
-	//	return SDL_QuitRequested()
+	//public class func qUItRequested() {
+	//	return SDL_QUItRequested()
 	//}
 
 	public class var numberOfTouchDevices: Int {
@@ -132,16 +132,17 @@ public class Events {
 	// Filtering
 
 	public static func filter(callback: EventFilterCallback) {
-		let box = Box(callback)
-		let opq = Unmanaged.passRetained(box).toOpaque()
-		let mut = UnsafeMutablePointer<Void>(opq)
-		SDL_FilterEvents({ (userdata,evt) in
-			let opq = COpaquePointer(userdata)
-			let box: Box<EventFilterCallback> = Unmanaged
-													.fromOpaque(opq)
-													.takeRetainedValue()
-			return box.value(&evt.memory) ? 1 : 0
-		}, mut)
+		// FIXME
+		// let box = Box(callback)
+		// let opq = Unmanaged.passRetained(box).toOpaque()
+		// let mut = UnsafeMutableRawPointer(opq)
+		// SDL_FilterEvents({ (userdata,evt) in
+		// 	let opq = OpaquePointer(userdata)
+		// 	let box: Box<EventFilterCallback> = Unmanaged
+		// 											.fromOpaque(opq)
+		// 											.takeRetainedValue()
+		// 	return box.value(&evt.pointee) ? 1 : 0
+		// }, mut)
 	}
 
 	public static func getFilter() -> EventFilterCallback? {
@@ -149,19 +150,20 @@ public class Events {
 	}
 
 	public static func setFilter(callback: EventFilterCallback?) {
-		clearFilter()
-		if (callback != nil) {
-			activeFilter = Box(callback!)
-			let opq = Unmanaged.passUnretained(activeFilter!).toOpaque()
-			let mut = UnsafeMutablePointer<Void>(opq)
-			SDL_SetEventFilter({ (userdata,evt) in
-				let opq = COpaquePointer(userdata)
-				let box: Box<EventFilterCallback> = Unmanaged
-														.fromOpaque(opq)
-														.takeUnretainedValue()
-				return box.value(&evt.memory) ? 1 : 0
-			}, mut)
-		}
+		// FIXME
+		// clearFilter()
+		// if (callback != nil) {
+		// 	activeFilter = Box(callback!)
+		// 	let opq = Unmanaged.passUnretained(activeFilter!).toOpaque()
+		// 	let mut = UnsafeMutableRawPointer(opq)
+		// 	SDL_SetEventFilter({ (userdata,evt) in
+		// 		let opq = OpaquePointer(userdata)
+		// 		let box: Box<EventFilterCallback> = Unmanaged
+		// 												.fromOpaque(opq)
+		// 												.takeUnretainedValue()
+		// 		return box.value(&evt.pointee) ? 1 : 0
+		// 	}, mut)
+		// }
 	}
 
 	public static func clearFilter() {
@@ -174,24 +176,25 @@ public class Events {
 	//
 	// Watching
 
-	public static func addWatch(callback: EventWatchCallback) -> WatchID {
-		let watchId = WatchID(callback)
-		watches.append(watchId)
-		if watches.count == 1 {
-			SDL_AddEventWatch({ (userdata,evt) in
-				for watch in Events.watches {
-					watch.cb(&evt.memory)
-				}
-				return 0
-			}, nil)
-		}
-		return watchId
-	}
+	// FIXME
+	// public static func addWatch(callback: EventWatchCallback) -> WatchID {
+	// 	let watchId = WatchID(callback)
+	// 	watches.append(watchId)
+	// 	if watches.count == 1 {
+	// 		SDL_AddEventWatch({ (userdata,evt) in
+	// 			for watch in Events.watches {
+	// 				watch.cb(&evt.pointee)
+	// 			}
+	// 			return 0
+	// 		}, nil)
+	// 	}
+	// 	return watchId
+	// }
 
 	public static func deleteWatch(id: WatchID) {
-		let ix = watches.indexOf({$0 === id})
+		let ix = watches.index(where: {$0 === id})
 		if ix != nil {
-			watches.removeAtIndex(ix!)
+			watches.remove(at: ix!)
 		}
 	}
 
@@ -201,91 +204,91 @@ public class Events {
 
 public extension Event {
 	// NOTE: this should be safe, structs are all laid out identically
-	public var timestamp: Uint32 { return self.motion.timestamp  }
-	public var windowID: Uint32 { return self.motion.windowID  }
+	public var timestamp: UInt32 { return self.motion.timestamp  }
+	public var windowID: UInt32 { return self.motion.windowID  }
 
 	//
 	// App
 
 	public var isQuit: Bool {
-		return self.type == Uint32(K_SDL_QUIT)
+		return self.type == SDL_QUIT.rawValue
 	}
 
 	//
 	// Window
 
 	public var isWindow: Bool {
-		return self.type == Uint32(K_SDL_WINDOWEVENT) 
+		return self.type == SDL_WINDOWEVENT.rawValue 
 	}
 
 	public var isWindowClose: Bool {
-		return self.window.event == Uint8(K_SDL_WINDOWEVENT_CLOSE) 
+		return self.window.event == UInt8(SDL_WINDOWEVENT_CLOSE) 
 	}
 
 	// Keyboard
 
 	public var isKeyDown: Bool {
-		return self.type == Uint32(K_SDL_KEYDOWN) 
+		return self.type == SDL_KEYDOWN.rawValue 
 	}
 
 	public var isKeyUp: Bool {
-		return self.type == Uint32(K_SDL_KEYUP) 
+		return self.type == SDL_KEYUP.rawValue 
 	}
 
 	public var isTextEditing: Bool {
-		return self.type == Uint32(K_SDL_TEXTEDITING) 
+		return self.type == SDL_TEXTEDITING.rawValue 
 	}
 
 	public var isTextInput: Bool {
-		return self.type == Uint32(K_SDL_TEXTINPUT) 
+		return self.type == SDL_TEXTINPUT.rawValue 
 	}
 
 	//public var isKeyMapChanged: Bool {
-	//	return self.type == Uint32(K_SDL_KEYMAPCHANGED) 
+	//	return self.type == SDL_KEYMAPCHANGED.rawValue 
 	//}
 
 	// Mouse
 	// TODO: "state" member
 
 	public var isMouseMotion: Bool {
-		return self.type == Uint32(K_SDL_MOUSEMOTION) 
+		return self.type == SDL_MOUSEMOTION.rawValue 
 	}
 
-	public var mouseMotionWhich: Uint32 { return self.motion.which  }
+	public var mouseMotionWhich: UInt32 { return self.motion.which  }
 	public var mouseMotionX: Int { return Int(self.motion.x)  }
 	public var mouseMotionY: Int { return Int(self.motion.y)  }
 	public var mouseMotionDX: Int { return Int(self.motion.xrel)  }
 	public var mouseMotionDY: Int { return Int(self.motion.yrel)  }
 	
 	public var isMouseButtonDown: Bool {
-		return self.type == Uint32(K_SDL_MOUSEBUTTONDOWN) 
+		return self.type == SDL_MOUSEBUTTONDOWN.rawValue 
 	}
 
 	public var isMouseButtonUp: Bool {
-		return self.type == Uint32(K_SDL_MOUSEBUTTONUP) 
+		return self.type == SDL_MOUSEBUTTONUP.rawValue 
 	}
 
 	public var isLeftMouseButton: Bool {
-		return self.button.button == Uint8(SDL_BUTTON_LEFT) 
+		return self.button.button == UInt8(SDL_BUTTON_LEFT) 
 	}
 
 	public var isMiddleMouseButton: Bool {
-		return self.button.button == Uint8(SDL_BUTTON_MIDDLE) 
+		return self.button.button == UInt8(SDL_BUTTON_MIDDLE) 
 	}
 
 	public var isRightMouseButton: Bool {
-		return self.button.button == Uint8(SDL_BUTTON_RIGHT) 
+		return self.button.button == UInt8(SDL_BUTTON_RIGHT) 
 	}
 
 	public var isX1MouseButton: Bool {
-		return self.button.button == Uint8(SDL_BUTTON_X1) 
+		return self.button.button == UInt8(SDL_BUTTON_X1) 
 	}
 
 	public var isX2MouseButton: Bool {
-		return self.button.button == Uint8(SDL_BUTTON_X2) 
+		return self.button.button == UInt8(SDL_BUTTON_X2) 
 	}
 
-	public var mouseButtonWhich: Uint32 { return self.button.which  }
+	public var mouseButtonWhich: UInt32 { return self.button.which  }
 
 	// TODO: replace this with an internal constant
 	public var mouseButtonButton: Int { return Int(self.button.button)  }
@@ -294,13 +297,13 @@ public extension Event {
 	public var mouseButtonClicks: Int { return Int(self.button.clicks)  }
 
 	public var isMouseWheel: Bool {
-		return self.type == Uint32(K_SDL_MOUSEWHEEL) 
+		return self.type == SDL_MOUSEWHEEL.rawValue 
 	}
 
-	public var mouseWheelWhich: Uint32 { return self.wheel.which  }
+	public var mouseWheelWhich: UInt32 { return self.wheel.which  }
 	public var mouseWheelDX: Int { return Int(self.wheel.x)  }
 	public var mouseWheelDY: Int { return Int(self.wheel.y)  }
 	
 	// TODO: "direction" member (constantify)
-	//public var mouseWheelIsFlipped: Bool { return self.wheel.direction == SDL_MOUSEWHEEL_FLIPPED  }
+	// public var mouseWheelIsFlipped: Bool { return self.wheel.direction == SDL_MOUSEWHEEL_FLIPPED  }
 }

@@ -19,7 +19,7 @@ import CSDL2
 // TODO: SDL_UpdateYUVTexture()
 
 public class Renderer {
-	init(renderer: COpaquePointer) {
+	init(renderer: OpaquePointer) {
 		theRenderer = renderer
 		theInfo = SDL_RendererInfo()
 		SDL_GetRendererInfo(theRenderer, &theInfo)
@@ -29,12 +29,12 @@ public class Renderer {
 		SDL_DestroyRenderer(theRenderer)
 	}
 
-	public func _sdlRenderer() -> COpaquePointer {
+	public func _sdlRenderer() -> OpaquePointer {
 		return theRenderer
 	}
 
 	public var name : String {
-		get { return String.fromCString(theInfo.name)! }
+		get { return String(cString: theInfo.name) }
 	}
 
 	public var numberOfTextureFormats : Int {
@@ -91,7 +91,7 @@ public class Renderer {
 		SDL_RenderSetScale(theRenderer, sx, sy)	
 	}
 
-	public func copyScaleTo(sx: inout Float, inout _ sy: Float) {
+	public func copyScaleTo(sx: inout Float,  _ sy: inout Float) {
 		SDL_RenderGetScale(theRenderer, &sx, &sy)	
 	}
 
@@ -116,32 +116,32 @@ public class Renderer {
 		SDL_RenderPresent(theRenderer)
 	}
 
-	public func createTexture(format format: UInt32, access: Int, width: Int, height: Int) -> Texture {
+	public func createTexture(format: UInt32, access: Int, width: Int, height: Int) -> Texture {
     	let tex = SDL_CreateTexture(theRenderer, format, Int32(access), Int32(width), Int32(height))
-    	return Texture(sdlTexture: tex)
+    	return Texture(sdlTexture: tex!)
     }
 
 	public func createTextureFromSurface(surface: Surface) -> Texture {
 		let tex = SDL_CreateTextureFromSurface(theRenderer, surface._sdlSurface())
-		return Texture(sdlTexture: tex)
+		return Texture(sdlTexture: tex!)
 	}
 
-	public func createStreamingTexture(width width: Int, height: Int) -> Texture {
+	public func createStreamingTexture(width: Int, height: Int) -> Texture {
 		let tex = SDL_CreateTexture(
 			theRenderer,
 			Uint32(SDL_PIXELFORMAT_ARGB8888),
-			K_SDL_TEXTUREACCESS_STREAMING,
+			Int32(SDL_TEXTUREACCESS_STREAMING),
 			Int32(width),
 			Int32(height)
 		)
-		return Texture(sdlTexture: tex)
+		return Texture(sdlTexture: tex!)
 	}
 
-	public func copyDrawColorTo(inout r r: UInt8, g: inout UInt8, b: inout UInt8, a: inout UInt8) {
+	public func copyDrawColorTo(r: inout UInt8, g: inout UInt8, b: inout UInt8, a: inout UInt8) {
 		SDL_GetRenderDrawColor(theRenderer, &r, &g, &b, &a)
 	}
 
-	public func setDrawColor(r r: Uint8, g: Uint8, b: Uint8, a: Uint8 = 255) {
+	public func setDrawColor(r: Uint8, g: Uint8, b: Uint8, a: Uint8 = 255) {
 		SDL_SetRenderDrawColor(theRenderer, r, g, b, a)
 	}
 
@@ -154,11 +154,11 @@ public class Renderer {
 		SDL_RenderCopy(theRenderer, texture._sdlTexture(), &s, &d)
 	}
 
-	public func copyTexture(texture: Texture, inout sourceRect s: Rect, inout destinationRect d: Rect) {
+	public func copyTexture(texture: Texture,  sourceRect s: inout Rect,  destinationRect d: inout Rect) {
 		SDL_RenderCopy(theRenderer, texture._sdlTexture(), &s, &d)
 	}
 
-	public func copyTexture(texture: Texture, inout sourceRect s: Rect) {
+	public func copyTexture(texture: Texture,  sourceRect s: inout Rect) {
 		SDL_RenderCopy(theRenderer, texture._sdlTexture(), &s, nil)
 	}
 
@@ -167,7 +167,7 @@ public class Renderer {
 		SDL_RenderCopy(theRenderer, texture._sdlTexture(), &s, nil)
 	}
 
-	public func copyTexture(texture: Texture, inout destinationRect d: Rect) {
+	public func copyTexture(texture: Texture,  destinationRect d: inout Rect) {
 		SDL_RenderCopy(theRenderer, texture._sdlTexture(), nil, &d)
 	}
 
@@ -234,9 +234,9 @@ public class Renderer {
 		SDL_RenderReadPixels(
 			theRenderer,
 			nil,
-			sdlSurface.memory.format.memory.format,
-			sdlSurface.memory.pixels,
-			sdlSurface.memory.pitch
+			sdlSurface.pointee.format.pointee.format,
+			sdlSurface.pointee.pixels,
+			sdlSurface.pointee.pitch
 		)
 	}
 
@@ -246,13 +246,13 @@ public class Renderer {
 		SDL_RenderReadPixels(
 			theRenderer,
 			&r,
-			sdlSurface.memory.format.memory.format,
-			sdlSurface.memory.pixels,
-			sdlSurface.memory.pitch
+			sdlSurface.pointee.format.pointee.format,
+			sdlSurface.pointee.pixels,
+			sdlSurface.pointee.pitch
 		)
 	}
 
-	let theRenderer: COpaquePointer
+	let theRenderer: OpaquePointer
 	var theInfo: SDL_RendererInfo
 }
 

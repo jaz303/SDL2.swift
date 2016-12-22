@@ -5,18 +5,19 @@ public class sdl {
 		SDL_Delay(UInt32(delay))
 	}
 
-	public class func setTimeout(delay: Int, callback: TimerCallback) -> TimerID {
-		let box = Box(callback)
-		let opq = Unmanaged.passRetained(box).toOpaque()
-		let mut = UnsafeMutablePointer<Void>(opq)
-		return SDL_AddTimer(UInt32(delay), { (delay,userdata) in
-			let opq = COpaquePointer(userdata)
-			let box: Box<TimerCallback> = Unmanaged
-											.fromOpaque(opq)
-											.takeRetainedValue()
-			return UInt32(box.value(Int(delay)))
-		}, mut)
-	}
+	// FIXME
+	// public class func setTimeout(delay: Int, callback: TimerCallback) -> TimerID {
+	// 	let box = Box(callback)
+	// 	let opq = Unmanaged.passRetained(box).toOpaque()
+	// 	let mut = UnsafeMutableRawPointer(opq)
+	// 	return SDL_AddTimer(UInt32(delay), { (delay,userdata) in
+	// 		let opq = OpaquePointer(userdata)
+	// 		let box: Box<TimerCallback> = Unmanaged
+	// 										.fromOpaque(opq)!
+	// 										.takeRetainedValue()
+	// 		return UInt32(box.value(Int(delay)))
+	// 	}, mut)
+	// }
 
 	public class func clearTimeout(timerId: TimerID) -> Bool {
 		return SDL_RemoveTimer(timerId) == SDL_TRUE

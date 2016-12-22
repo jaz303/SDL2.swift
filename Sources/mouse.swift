@@ -31,7 +31,7 @@ public class Mouse {
 		SDL_SetRelativeMouseMode(SDL_FALSE)	
 	}
 
-	public static func warpMouseTo(x x: Int, y: Int, inWindow window: Window) {
+	public static func warpMouseTo(x: Int, y: Int, inWindow window: Window) {
 		SDL_WarpMouseInWindow(window._sdlWindow(), Int32(x), Int32(y))
 	}
 
@@ -43,7 +43,7 @@ public class Mouse {
 		y = Int(y32)
 	}
 
-	// public static func copyGlobalMouseStateTo(x: inout Int, inout _ y: Int) {
+	// public static func copyGlobalMouseStateTo(x: inout Int,  _ y: inout Int) {
 	// 	// TODO: get button state too
 	// 	var x32: Int32 = 0, y32: Int32 = 0
 	// 	SDL_GetGlobalMouseState(&x32, &y32)
@@ -74,7 +74,7 @@ public class Mouse {
 		}
 	}
 
-	public static func setCursor(cursor: Cursor) {
+	public static func setCursor(_ cursor: Cursor) {
 		_activeCursor = cursor
 		SDL_SetCursor(cursor.cursor)
 	}
@@ -106,7 +106,7 @@ public class Cursor {
 		self.owned = owned
 	}
 
-	init(cursor: COpaquePointer) {
+	init(cursor: OpaquePointer) {
 		self.cursor = cursor
 		self.owned = false
 	}
@@ -121,6 +121,6 @@ public class Cursor {
 		Mouse.setCursor(self)
 	}
 
-	let cursor: COpaquePointer
+	let cursor: OpaquePointer
 	let owned: Bool
 }

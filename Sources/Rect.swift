@@ -19,26 +19,26 @@ extension Rect {
 		return x == 0 && y == 0 && w == 0 && h == 0
 	}
 
-	public func unionRect(aRect: Rect) -> Rect {
+	public func unionRect(_ aRect: Rect) -> Rect {
 		var outRect = Rect()
 		unionRect(aRect, outRect: &outRect)
 		return outRect
 	}
 
-	public func unionRect(aRect: Rect, outRect: inout Rect) {
+	public func unionRect(_ aRect: Rect, outRect: inout Rect) {
 		outRect.x = min(x, aRect.x)
 		outRect.y = min(y, aRect.y)
 		outRect.w = max(right, aRect.right) - outRect.x
 		outRect.h = max(bottom, aRect.bottom) - outRect.y
 	}
 
-	public func intersectRect(aRect: Rect) -> Rect {
+	public func intersectRect(_ aRect: Rect) -> Rect {
 		var outRect = Rect.zero()
 		intersectRect(aRect, outRect: &outRect)
 		return outRect
 	}
 
-	public func intersectRect(aRect: Rect, outRect: inout Rect) -> Bool {
+	public func intersectRect(_ aRect: Rect, outRect: inout Rect) -> Bool {
 		let x5 = max(x, aRect.x)
 		let x6 = min(right, aRect.right)
 		let y5 = max(y, aRect.y)
@@ -54,25 +54,25 @@ extension Rect {
 		}
 	}
 
-	public func containsRect(rect: Rect) -> Bool {
+	public func containsRect(_ rect: Rect) -> Bool {
 		return rect.x >= x
 				&& (rect.x + rect.w) <= (x + w)
 				&& rect.y >= y
 				&& (rect.y + rect.h) <= (y + h)
 	}
 
-	public func intersectsRect(aRect: Rect) -> Bool {
+	public func intersectsRect(_ aRect: Rect) -> Bool {
 		return !(right < aRect.left
 					&& left > aRect.right
 					&& bottom < aRect.top
 					&& top > aRect.bottom)
 	}
 
-	mutating public func translateBy(point: Point) {
+	mutating public func translateBy(_ point: Point) {
 		x += point.x; y += point.y
 	}
 
-	mutating public func translateBy(dx dx: Int, dy: Int) {
+	mutating public func translateBy(dx: Int, dy: Int) {
 		x += dx; y += dy
 	}
 
@@ -83,7 +83,7 @@ extension Rect {
 		outRect.h = h
 	}
 
-	public func translateBy(dx dx: Int, dy: Int, outRect: inout Rect) {
+	public func translateBy(dx: Int, dy: Int, outRect: inout Rect) {
 		outRect.x = x + dx
 		outRect.y = y + dy
 		outRect.w = w
@@ -94,7 +94,7 @@ extension Rect {
 		return Rect(x: x + point.x, y: y + point.y, w: w, h: h)
 	}
 
-	public func translatedBy(dx dx: Int, dy: Int) -> Rect {
+	public func translatedBy(dx: Int, dy: Int) -> Rect {
 		return Rect(x: x + dx, y: y + dy, w: w, h: h)
 	}
 }

@@ -6,7 +6,7 @@ public class Clipboard {
 	}
 
 	public static func getText() -> String? {
-		return String.fromCString(SDL_GetClipboardText())
+		return String(cString: SDL_GetClipboardText())
 	}
 
 	public static func setText(text: String) {

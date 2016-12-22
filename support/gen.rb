@@ -5,7 +5,7 @@ ENUMERATIONS = {
   'SDL_AudioFormat' => 'Int',
   'SDL_AudioStatus' => 'Int',
   'SDL_BlendMode' => 'Int',
-  'SDL_EventType' => 'Int',
+  #'SDL_EventType' => 'Int',
   'SDL_GLattr' => 'Int',
   'SDL_GLcontextFlag' => 'Int',
   'SDL_GLprofile' => 'Int',
@@ -27,20 +27,19 @@ ENUMERATIONS = {
   'SDL_TextureModulate' => 'Int',
   'SDL_ThreadPriority' => 'Int',
   'SDL_WinRT_Path' => 'Int',
-  'SDL_WindowEventID' => 'Uint8',
-  'SDL_Keymod' => 'Uint32',
-  'SDL_MessageBoxButtonFlags' => 'Uint32',
-  'SDL_MessageBoxFlags' => 'Uint32',
-  'SDL_RendererFlip' => 'Uint32',
-  'SDL_WindowFlags' => 'Uint32',
-  'SDL_eventaction' => 'Int'
+  'SDL_WindowEventID' => 'UInt8',
+  'SDL_Keymod' => 'UInt32',
+  'SDL_MessageBoxButtonFlags' => 'UInt32',
+  'SDL_MessageBoxFlags' => 'UInt32',
+  'SDL_RendererFlip' => 'UInt32',
+  'SDL_WindowFlags' => 'UInt32'
 }
 
 DEFS = [
   { :type => 'Int',
     :values => []
   },
-  { :type => 'Uint32',
+  { :type => 'UInt32',
     :values => %w(
       SDL_INIT_TIMER
       SDL_INIT_AUDIO
@@ -58,23 +57,21 @@ DEFS = [
       KMOD_GUI
     )
   },
-  { :type => 'Int',
+  { :type => 'Int32',
     :values => %w(
       SDL_WINDOWPOS_UNDEFINED
       SDL_WINDOWPOS_CENTERED
-      SDL_FALSE
-      SDL_TRUE
     )
   },
-  { :type => 'Uint8',
-    :values => %w(
-      SDL_BUTTON_LEFT
-      SDL_BUTTON_MIDDLE
-      SDL_BUTTON_RIGHT
-      SDL_BUTTON_X1
-      SDL_BUTTON_X2
-    )
-  }
+  # { :type => 'UInt8',
+  #   :values => %w(
+  #     SDL_BUTTON_LEFT
+  #     SDL_BUTTON_MIDDLE
+  #     SDL_BUTTON_RIGHT
+  #     SDL_BUTTON_X1
+  #     SDL_BUTTON_X2
+  #   )
+  # }
 ]
 
 KEYS = DEFS[0]
@@ -132,7 +129,6 @@ Dir.chdir(PATH) do
       end
     end
   end
-  #DEFS << all_enums
 end
 
 # Remove blacklisted defs
