@@ -17,21 +17,21 @@ public struct WindowFlags : OptionSet {
 	public let rawValue : UInt32
 	public init(rawValue: UInt32) { self.rawValue = rawValue }
 
-	static let FULLSCREEN = WindowFlags(rawValue: UInt32(SDL_WINDOW_FULLSCREEN))
-	static let FULLSCREEN_DESKTOP = WindowFlags(rawValue: UInt32(SDL_WINDOW_FULLSCREEN_DESKTOP))
-	static let OPENGL = WindowFlags(rawValue: UInt32(SDL_WINDOW_OPENGL))
-	static let SHOWN = WindowFlags(rawValue: UInt32(SDL_WINDOW_SHOWN))
-	static let HIDDEN = WindowFlags(rawValue: UInt32(SDL_WINDOW_HIDDEN))
-	static let BORDERLESS = WindowFlags(rawValue: UInt32(SDL_WINDOW_BORDERLESS))
-	static let RESIZABLE = WindowFlags(rawValue: UInt32(SDL_WINDOW_RESIZABLE))
-	static let MINIMIZED = WindowFlags(rawValue: UInt32(SDL_WINDOW_MINIMIZED))
-	static let MAXIMIZED = WindowFlags(rawValue: UInt32(SDL_WINDOW_MAXIMIZED))
-	static let INPUT_GRABBED = WindowFlags(rawValue: UInt32(SDL_WINDOW_INPUT_GRABBED))
-	static let INPUT_FOCUS = WindowFlags(rawValue: UInt32(SDL_WINDOW_INPUT_FOCUS))
-	static let MOUSE_FOCUS = WindowFlags(rawValue: UInt32(SDL_WINDOW_MOUSE_FOCUS))
-	static let FOREIGN = WindowFlags(rawValue: UInt32(SDL_WINDOW_FOREIGN))
-	static let ALLOW_HIGHDPI = WindowFlags(rawValue: UInt32(SDL_WINDOW_ALLOW_HIGHDPI))
-	static let MOUSE_CAPTURE = WindowFlags(rawValue: UInt32(SDL_WINDOW_MOUSE_CAPTURE))
+	public static let FULLSCREEN = WindowFlags(rawValue: UInt32(SDL_WINDOW_FULLSCREEN))
+	public static let FULLSCREEN_DESKTOP = WindowFlags(rawValue: UInt32(SDL_WINDOW_FULLSCREEN_DESKTOP))
+	public static let OPENGL = WindowFlags(rawValue: UInt32(SDL_WINDOW_OPENGL))
+	public static let SHOWN = WindowFlags(rawValue: UInt32(SDL_WINDOW_SHOWN))
+	public static let HIDDEN = WindowFlags(rawValue: UInt32(SDL_WINDOW_HIDDEN))
+	public static let BORDERLESS = WindowFlags(rawValue: UInt32(SDL_WINDOW_BORDERLESS))
+	public static let RESIZABLE = WindowFlags(rawValue: UInt32(SDL_WINDOW_RESIZABLE))
+	public static let MINIMIZED = WindowFlags(rawValue: UInt32(SDL_WINDOW_MINIMIZED))
+	public static let MAXIMIZED = WindowFlags(rawValue: UInt32(SDL_WINDOW_MAXIMIZED))
+	public static let INPUT_GRABBED = WindowFlags(rawValue: UInt32(SDL_WINDOW_INPUT_GRABBED))
+	public static let INPUT_FOCUS = WindowFlags(rawValue: UInt32(SDL_WINDOW_INPUT_FOCUS))
+	public static let MOUSE_FOCUS = WindowFlags(rawValue: UInt32(SDL_WINDOW_MOUSE_FOCUS))
+	public static let FOREIGN = WindowFlags(rawValue: UInt32(SDL_WINDOW_FOREIGN))
+	public static let ALLOW_HIGHDPI = WindowFlags(rawValue: UInt32(SDL_WINDOW_ALLOW_HIGHDPI))
+	public static let MOUSE_CAPTURE = WindowFlags(rawValue: UInt32(SDL_WINDOW_MOUSE_CAPTURE))
 	
 	// FIXME: need a >= 2.0.5 version check here
 	// static let ALWAYS_ON_TOP = WindowFlags(rawValue: UInt32(SDL_INIT_ALWAYS_ON_TOP))
@@ -45,12 +45,12 @@ public struct InitOptions : OptionSet {
 	public let rawValue : UInt32
 	public init(rawValue: UInt32) { self.rawValue = rawValue }
 
-	static let TIMER = InitOptions(rawValue: UInt32(SDL_INIT_TIMER))
-	static let AUDIO = InitOptions(rawValue: UInt32(SDL_INIT_AUDIO))
-	static let VIDEO = InitOptions(rawValue: UInt32(SDL_INIT_VIDEO))
-	static let JOYSTICK = InitOptions(rawValue: UInt32(SDL_INIT_JOYSTICK))
-	static let HAPTIC = InitOptions(rawValue: UInt32(SDL_INIT_HAPTIC))
-	static let GAMECONTROLLER = InitOptions(rawValue: UInt32(SDL_INIT_GAMECONTROLLER))
-	static let EVENTS = InitOptions(rawValue: UInt32(SDL_INIT_EVENTS))
-	static let EVERYTHING = InitOptions(rawValue: UInt32(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC | SDL_INIT_GAMECONTROLLER | SDL_INIT_EVENTS))
+	public static let TIMER = InitOptions(rawValue: UInt32(SDL_INIT_TIMER))
+	public static let AUDIO = InitOptions(rawValue: UInt32(SDL_INIT_AUDIO))
+	public static let VIDEO = InitOptions(rawValue: UInt32(SDL_INIT_VIDEO))
+	public static let JOYSTICK = InitOptions(rawValue: UInt32(SDL_INIT_JOYSTICK))
+	public static let HAPTIC = InitOptions(rawValue: UInt32(SDL_INIT_HAPTIC))
+	public static let GAMECONTROLLER = InitOptions(rawValue: UInt32(SDL_INIT_GAMECONTROLLER))
+	public static let EVENTS = InitOptions(rawValue: UInt32(SDL_INIT_EVENTS))
+	public static let EVERYTHING = InitOptions(rawValue: UInt32(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC | SDL_INIT_GAMECONTROLLER | SDL_INIT_EVENTS))
 }
