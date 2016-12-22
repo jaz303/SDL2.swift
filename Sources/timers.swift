@@ -1,6 +1,6 @@
 import CSDL2
 
-public class sdl {
+extension sdl {
 	public class func delay(delay: Int) {
 		SDL_Delay(UInt32(delay))
 	}

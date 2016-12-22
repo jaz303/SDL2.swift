@@ -1,5 +1,7 @@
 import CSDL2
 
+public class sdl {}
+
 /*
 public struct InitOptions : OptionSetType {
 	public init(rawValue : UInt) {
@@ -38,7 +40,7 @@ public func calculateGammaRamp(gamma: Float, ramp: [UInt16]) {
 	// SDL_CalculateGammaRamp(gamma, ramp)
 }
 
-public class SDL {
+public extension sdl {
 	// REVIEW: should this throw on failure?
 	public class func start() -> Bool {
 		return start(subsystems: InitOptions.EVERYTHING)

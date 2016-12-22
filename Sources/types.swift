@@ -10,6 +10,8 @@ public typealias TouchID = SDL_TouchID
 public typealias SystemCursor = SDL_SystemCursor
 public typealias Keycode = SDL_Keycode
 public typealias Scancode = SDL_Scancode
+public typealias GLContext = SDL_GLContext
+public typealias GLattr = SDL_GLattr
 
 public struct WindowFlags : OptionSet {
 	public let rawValue : UInt32
