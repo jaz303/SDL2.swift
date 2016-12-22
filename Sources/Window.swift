@@ -1,12 +1,15 @@
 import CSDL2
 
 public class Window {
-	public init(title: String = "Untitled Window", width: Int = 800, height: Int = 600) {
+	public init(title: String = "Untitled Window",
+				width: Int = 800, height: Int = 600,
+				x: Int = SDL_WINDOWPOS_CENTERED, y: Int = SDL_WINDOWPOS_CENTERED,
+				flags: WindowFlags = WindowFlags(rawValue: 0)) {
 		theWindow = SDL_CreateWindow(
 			title,
-			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+			Int32(x), Int32(y),
 			Int32(width), Int32(height),
-			Uint32(SDL_WINDOW_SHOWN)
+			flags.rawValue
 		);
 		theRenderer = nil
 	}

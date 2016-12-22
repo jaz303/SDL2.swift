@@ -49,7 +49,7 @@ DEFS = [
       KMOD_GUI
     )
   },
-  { :type => 'Int32',
+  { :type => 'Int',
     :values => %w(
       SDL_WINDOWPOS_UNDEFINED
       SDL_WINDOWPOS_CENTERED
