@@ -39,12 +39,14 @@ public func calculateGammaRamp(gamma: Float, ramp: [UInt16]) {
 }
 
 public class SDL {
+	// REVIEW: should this throw on failure?
 	public class func start() -> Bool {
-		if SDL_Init(Uint32(SDL_INIT_VIDEO | SDL_INIT_EVENTS)) < 0 {
-			print("error initialising SDL");
-			return false
-		}
-		return true
+		return start(subsystems: InitOptions.EVERYTHING)
+	}
+
+	// REVIEW: should this throw on failure?
+	public class func start(subsystems: InitOptions) -> Bool {
+		return SDL_Init(subsystems.rawValue) >= 0
 	}
 
 	public class func quit() {
