@@ -13,9 +13,11 @@ public typealias Scancode = SDL_Scancode
 public typealias GLContext = SDL_GLContext
 public typealias GLattr = SDL_GLattr
 
+public typealias XXPixelFormat = UInt32
+
 public struct WindowFlags : OptionSet {
 	public let rawValue : UInt32
-	public init(rawValue: UInt32) { self.rawValue = rawValue }
+	public init(rawValue: UInt32 = 0) { self.rawValue = rawValue }
 
 	public static let FULLSCREEN = WindowFlags(rawValue: UInt32(SDL_WINDOW_FULLSCREEN))
 	public static let FULLSCREEN_DESKTOP = WindowFlags(rawValue: UInt32(SDL_WINDOW_FULLSCREEN_DESKTOP))
