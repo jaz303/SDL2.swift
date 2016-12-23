@@ -10,6 +10,8 @@ extension Rect {
 	public var right: Int32 { get { return x + w } }
 	public var top: Int32 { get { return y } }
 	public var bottom: Int32 { get { return y + h } }
+	public var width: Int32 { get { return w } }
+	public var height: Int32 { get { return h } }
 
 	mutating public func makeZero() {
 		x = 0; y = 0; w = 0; h = 0
