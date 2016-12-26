@@ -3,7 +3,6 @@ import CSDL2
 // TODO: SDL_GL_LoadLibrary (don't think I need it)
 // TODO: SDL_GL_UnloadLibrary (don't think I need it)
 // TODO: SDL_GL_GetProcAddress (don't think I need it)
-// TODO: SDL_GL_GetCurrentWindow (needs internal map)
 
 extension sdl {
 	public class gl {
@@ -19,12 +18,26 @@ extension sdl {
 			return SDL_GL_ExtensionSupported(ext) == SDL_TRUE
 		}
 
+		public static func getAttribute(name: GLattr) -> Int32 {
+			var out : Int32 = 0
+			SDL_GL_GetAttribute(name, &out)
+			return out
+		}
+
 		public static func getAttribute(name: GLattr, value: inout Int32) -> Bool {
 			return SDL_GL_GetAttribute(name, &value) == 0
 		}
 
 		public static func getCurrentContext() -> GLContext? {
 			return SDL_GL_GetCurrentContext()
+		}
+
+		public static func getCurrentWindow() -> Window? {
+			let windowPtr = SDL_GL_GetCurrentWindow()
+			if windowPtr == nil {
+				return nil
+			}
+			return Window.lookup(id: SDL_GetWindowID(windowPtr))
 		}
 
 		public static func getDrawableSize(window: Window, width: inout Int, height: inout Int) {
