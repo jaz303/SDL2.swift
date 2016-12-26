@@ -1,5 +1,8 @@
 import CSDL2
 
+public class DummyContext {}
+let theDummyContext = DummyContext()
+
 public typealias AudioSpec = SDL_AudioSpec
 extension AudioSpec {
 	public var frequency: Int32 {
@@ -7,28 +10,40 @@ extension AudioSpec {
 		set(newFrequency) { freq = newFrequency }
 	}
 
-	// NOTE: this is leaky and probably very, very illegal
-	// TODO: we should return a token that can be used to destroy the callback
-	mutating public func setCallback<C,T>(context: C, callback: @escaping AudioCallback<C,T>) {
-		let opq = Unmanaged.passRetained(CallbackShim(context, callback, Int32(MemoryLayout<T>.stride))).toOpaque()
+	mutating public func setCallback(callback: @escaping AudioCallback<DummyContext>) {
+		setCallback(context: theDummyContext, callback: callback)
+	}
+
+	mutating public func setCallback<C>(context: C, callback: @escaping AudioCallback<C>) {
+		let opq = Unmanaged.passRetained(CallbackShim(context, callback)).toOpaque()
 		let mut = UnsafeMutableRawPointer(opq)
 		self.userdata = mut
 		self.callback = { (userdata, data, numBytes) in
 			let opq = UnsafeRawPointer(userdata)!
-			let box: CallbackShim<AnyObject,UInt8> = Unmanaged.fromOpaque(opq).takeUnretainedValue()
-			let elemCount = Int(numBytes / box.sz)
-			box.cb(box.ctx, Array(UnsafeBufferPointer(start: data, count: elemCount)))
+			let box: CallbackShim<AnyObject> = Unmanaged.fromOpaque(opq).takeUnretainedValue()
+			box.cb(box.ctx, data!, Int(numBytes))
+		}
+	}
+
+	mutating public func setCallback<T>(callback: @escaping AudioCallbackFoo<DummyContext,T>) {
+		setCallback(context: theDummyContext, callback: callback)
+	}
+
+	mutating public func setCallback<C,T>(context: C, callback: @escaping AudioCallbackFoo<C,T>) {
+		setCallback(context: context) { (ctx, data, length) in
+			let elementCount = length / MemoryLayout<T>.stride
+			data.withMemoryRebound(to: T.self, capacity: elementCount) { (data) in
+				callback(ctx, UnsafeMutableBufferPointer<T>(start: data, count: elementCount))
+			}
 		}
 	}
 }
 
-class CallbackShim<C,T> {
-	init(_ ctx: C, _ cb: @escaping AudioCallback<C,T>, _ elementSize: Int32) {
+class CallbackShim<C> {
+	init(_ ctx: C, _ cb: @escaping AudioCallback<C>) {
 		self.ctx = ctx
 		self.cb = cb
-		self.sz = elementSize
 	}
 	let ctx: C
-	let cb: AudioCallback<C,T>
-	let sz: Int32
+	let cb: AudioCallback<C>
 }

@@ -23,7 +23,7 @@ extension sdl {
 			SDL_AudioQuit()
 		}
 
-		public static var currentDriver: String? {
+		public static var currentDriverName: String? {
 			let cstr = SDL_GetCurrentAudioDriver()
 			return (cstr == nil) ? nil : String(cString: cstr!)
 		}
@@ -61,7 +61,7 @@ extension sdl {
 		}
 
 		public static func openPlaybackDevice(device: String?, spec: AudioSpec, allowedChanges: AudioChange = AudioChange.NONE) -> AudioDevice? {
-			var desiredSpec : AudioSpec = AudioSpec()
+			var desiredSpec : AudioSpec = spec
 			var obtainedSpec : AudioSpec = AudioSpec()
 			let res = SDL_OpenAudioDevice(device, 0, &desiredSpec, &obtainedSpec, allowedChanges.rawValue)
 			if res == 0 {
@@ -72,7 +72,7 @@ extension sdl {
 		}
 
 		public static func openCaptureDevice(device: String?, spec: AudioSpec, allowedChanges: AudioChange = AudioChange.NONE) -> AudioDevice? {
-			var desiredSpec : AudioSpec = AudioSpec()
+			var desiredSpec : AudioSpec = spec
 			var obtainedSpec : AudioSpec = AudioSpec()
 			let res = SDL_OpenAudioDevice(device, 1, &desiredSpec, &obtainedSpec, allowedChanges.rawValue)
 			if res == 0 {

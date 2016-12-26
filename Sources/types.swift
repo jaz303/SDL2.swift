@@ -1,6 +1,8 @@
 import CSDL2
 
-public typealias AudioCallback<C: AnyObject,T> = (C, [T]) -> ()
+public typealias AudioCallback<C> = (C, UnsafeMutablePointer<UInt8>, Int) -> ()
+public typealias AudioCallbackFoo<C,T> = (C, UnsafeMutableBufferPointer<T>) -> ()
+
 public typealias TimerCallback = (Int) -> (Int)
 public typealias TimerID = SDL_TimerID
 public typealias Event = SDL_Event
@@ -15,10 +17,17 @@ public typealias GLContext = SDL_GLContext
 public typealias GLattr = SDL_GLattr
 
 public typealias AudioStatus = SDL_AudioStatus
-public typealias AudioFormat = SDL_AudioFormat
+//public typealias AudioFormat = SDL_AudioFormat
 public typealias AudioSpect = SDL_AudioSpec
 
 public typealias XXPixelFormat = UInt32
+
+public struct AudioFormat : OptionSet {
+	public let rawValue : UInt16
+	public init(rawValue: UInt16 = 0) { self.rawValue = rawValue }
+
+	public static let F32 = AudioFormat(rawValue: UInt16(AUDIO_F32))
+}
 
 public struct AudioChange : OptionSet {
 	public let rawValue : Int32

@@ -98,3 +98,42 @@ while true {
 	}
 }
 ```
+
+## Audio Example
+
+```swift
+#if os(OSX) || os(iOS)
+import Darwin
+#elseif os(Linux)
+import Glibc
+#endif
+
+sdl.start()
+defer { sdl.quit() }
+
+var spec : AudioSpec = AudioSpec()
+spec.frequency = 44100
+spec.channels = 2
+spec.samples = 4096
+spec.format = AudioFormat.F32.rawValue
+
+var sample = 0
+spec.setCallback() { (_, buf: UnsafeMutableBufferPointer<Float>) in
+	for var i in 0 ..< buf.count {
+		let ix = (Float(sample) / 44100.0) * Float(M_PI) * 2.0
+		buf[i] = sin(ix * 440.0) * 0.5
+		sample += 1
+	}
+}
+
+let audioDevice = sdl.audio.openDefaultPlaybackDevice(spec: spec, allowedChanges: AudioChange.ANY)!
+audioDevice.resume()
+
+var evt = Event()
+while true {
+	Events.wait(evt: &evt)
+	if evt.isQuit {
+		break
+	}
+}
+```
