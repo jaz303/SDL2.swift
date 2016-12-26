@@ -42,7 +42,7 @@ public func calculateGammaRamp(gamma: Float, ramp: [UInt16]) {
 
 public extension sdl {
 	// REVIEW: should this throw on failure?
-	public class func start() -> Bool {
+	@discardableResult public class func start() -> Bool {
 		return start(subsystems: InitOptions.EVERYTHING)
 	}
 
