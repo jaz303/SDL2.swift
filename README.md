@@ -101,6 +101,8 @@ while true {
 
 ## Audio Example
 
+440Hz sine wave in stereo on the default audio device:
+
 ```swift
 #if os(OSX) || os(iOS)
 import Darwin
@@ -119,14 +121,16 @@ spec.format = AudioFormat.F32.rawValue
 
 var sample = 0
 spec.setCallback() { (_, buf: UnsafeMutableBufferPointer<Float>) in
-	for var i in 0 ..< buf.count {
+	for i in stride(from: 0, to: buf.count, by: 2) {
 		let ix = (Float(sample) / 44100.0) * Float(M_PI) * 2.0
-		buf[i] = sin(ix * 440.0) * 0.5
+		let val = sin(ix * 440.0) * 0.7
+		buf[i] = val
+		buf[i+1] = val
 		sample += 1
 	}
 }
 
-let audioDevice = sdl.audio.openDefaultPlaybackDevice(spec: spec, allowedChanges: AudioChange.ANY)!
+let audioDevice = sdl.audio.openDefaultPlaybackDevice(spec: spec)!
 audioDevice.resume()
 
 var evt = Event()
