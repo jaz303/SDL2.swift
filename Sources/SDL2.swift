@@ -54,4 +54,14 @@ public extension sdl {
 	public class func quit() {
 		SDL_Quit()
 	}
+
+	public class func waitForQuit() {
+		var evt = Event()
+		while true {
+			Events.wait(evt: &evt)
+			if evt.isQuit {
+				break
+			}
+		}
+	}
 }

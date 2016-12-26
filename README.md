@@ -133,11 +133,5 @@ spec.setCallback() { (_, buf: UnsafeMutableBufferPointer<Float>) in
 let audioDevice = sdl.audio.openDefaultPlaybackDevice(spec: spec)!
 audioDevice.resume()
 
-var evt = Event()
-while true {
-	Events.wait(evt: &evt)
-	if evt.isQuit {
-		break
-	}
-}
+sdl.waitForQuit()
 ```
