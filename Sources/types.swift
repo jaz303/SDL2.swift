@@ -13,7 +13,22 @@ public typealias Scancode = SDL_Scancode
 public typealias GLContext = SDL_GLContext
 public typealias GLattr = SDL_GLattr
 
+public typealias AudioStatus = SDL_AudioStatus
+public typealias AudioFormat = SDL_AudioFormat
+public typealias AudioSpect = SDL_AudioSpec
+
 public typealias XXPixelFormat = UInt32
+
+public struct AudioChange : OptionSet {
+	public let rawValue : Int32
+	public init(rawValue: Int32 = 0) { self.rawValue = rawValue }
+
+	public static let NONE = AudioChange(rawValue: 0)
+	public static let FREQUENCY = AudioChange(rawValue: Int32(SDL_AUDIO_ALLOW_FREQUENCY_CHANGE))
+	public static let FORMAT = AudioChange(rawValue: Int32(SDL_AUDIO_ALLOW_FORMAT_CHANGE))
+	public static let CHANNELS = AudioChange(rawValue: Int32(SDL_AUDIO_ALLOW_CHANNELS_CHANGE))
+	public static let ANY = AudioChange(rawValue: Int32(SDL_AUDIO_ALLOW_FREQUENCY_CHANGE | SDL_AUDIO_ALLOW_FORMAT_CHANGE | SDL_AUDIO_ALLOW_CHANNELS_CHANGE))
+}
 
 public struct WindowFlags : OptionSet {
 	public let rawValue : UInt32
