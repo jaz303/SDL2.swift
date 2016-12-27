@@ -6,14 +6,21 @@
 
 ## Features
 
+[ ] Initialization and Shutdown
+[ ] Configuration Variables
+[x] Error Handling
+[ ] Log Handling
+[ ] Assertions
+[ ] Querying SDL Version
+
 [x] OpenGL
 [x] Display and Window Management - check!
 [ ] 2D Accelerated Rendering
 [ ] Pixel Formats and Conversion Routines
 [ ] Rectangle Functions
 [ ] Surface Creation and Simple Drawing
-[ ] Platform-specific Window Management
-[ ] Clipboard Handling
+[!] Platform-specific Window Management
+[x] Clipboard Handling
 
 [ ] Event Handling
 [ ] Keyboard Support
@@ -31,12 +38,12 @@
 
 [x] Timer support
 
-[ ] Filesystem Paths
+[x] Filesystem Paths
 [ ] File I/O Abstraction
 
-[ ] Platform Detection
-[ ] CPU Feature Detection
-[ ] Byte Order and Byte Swapping
+[x] Platform Detection
+[x] CPU Feature Detection
+[x] Byte Order and Byte Swapping
 [ ] Bit Manipulation
 
 [ ] Power Management Status

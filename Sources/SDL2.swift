@@ -64,4 +64,12 @@ public extension sdl {
 			}
 		}
 	}
+
+	public static func clearError() {
+		SDL_ClearError()
+	}
+
+	public static func getError() -> String {
+		return String(cString: SDL_GetError())
+	}
 }
