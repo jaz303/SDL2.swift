@@ -1,9 +1,45 @@
-Window
-------
+## Legend
 
-[ ] maintain map of window ID => window
+[ ] = not done
+[x] = finished for v1, not necessarily complete
+[!] = no plans to implement
 
-Demo 1
-------
-Load image
-Click to paint image onto window
+## Features
+
+[x] OpenGL
+[x] Display and Window Management - check!
+[ ] 2D Accelerated Rendering
+[ ] Pixel Formats and Conversion Routines
+[ ] Rectangle Functions
+[ ] Surface Creation and Simple Drawing
+[ ] Platform-specific Window Management
+[ ] Clipboard Handling
+
+[ ] Event Handling
+[ ] Keyboard Support
+[ ] Mouse Support
+[ ] Joystick Support
+[ ] Game Controller Support
+
+[ ] Force Feedback Support
+
+[x] Audio Device Management, Playing and Recording
+
+[!] Thread Management
+[!] Thread Synchronization Primitives
+[!] Atomic Operations
+
+[x] Timer support
+
+[ ] Filesystem Paths
+[ ] File I/O Abstraction
+
+[ ] Platform Detection
+[ ] CPU Feature Detection
+[ ] Byte Order and Byte Swapping
+[ ] Bit Manipulation
+
+[ ] Power Management Status
+
+[!] Platform-specific Functionality
+[!] Standard Library Functionality
