@@ -85,6 +85,8 @@ BLACKLIST_DEFS = [/WINRT/, /SDL_SYSWM/]
 includes = ["SDL2/SDL.h"]
 if RUBY_PLATFORM =~ /linux/
   includes += ["GL/gl.h", "GL/glu.h"]
+else
+  BLACKLIST_FILES << /SDL_egl\.h/
 end
 
 # Index all of the enums

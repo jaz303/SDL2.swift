@@ -4,7 +4,7 @@ SDL:=$(shell cat sdl2-prefix)
 all: $(CONSTANTS)
 	
 $(CONSTANTS): sdl2-prefix constants.c 
-	gcc -I$(< sdl2-prefix)/include -o constants constants.c
+	gcc -I$(SDL)/include -o constants constants.c
 	./constants > $@
 	rm constants
 
